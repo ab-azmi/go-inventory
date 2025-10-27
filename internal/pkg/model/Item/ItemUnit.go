@@ -14,7 +14,7 @@ type ItemUnit struct {
 }
 
 func (ItemUnit) TableName() string {
-	return "Item/ItemUnit"
+	return "item_units"
 }
 
 func (md *ItemUnit) SetReference() uint {

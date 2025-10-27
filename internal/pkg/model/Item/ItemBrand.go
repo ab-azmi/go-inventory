@@ -8,7 +8,7 @@ type ItemBrand struct {
 }
 
 func (ItemBrand) TableName() string {
-	return "Item/ItemBrand"
+	return "item_brands"
 }
 
 func (md *ItemBrand) SetReference() uint {

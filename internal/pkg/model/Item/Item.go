@@ -6,7 +6,7 @@ type Item struct {
 	xtrememodel.BaseModelUUID
 	TypeId        uint    `gorm:"column:typeId;type:bigint;not null"`
 	CategoryId    uint    `gorm:"column:categoryId;type:bigint;not null"`
-	UnitID        uint    `gorm:"column:unitId;type:bigint;not null"`
+	UnitId        uint    `gorm:"column:unitId;type:bigint;not null"`
 	BrandId       *uint   `gorm:"column:brandId;type:bigint"`
 	SKU           string  `gorm:"column:SKU;type:varchar(20);not null"`
 	Name          string  `gorm:"column:name;type:varchar(255);not null"`

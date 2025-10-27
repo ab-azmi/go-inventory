@@ -8,7 +8,7 @@ type ItemType struct {
 }
 
 func (ItemType) TableName() string {
-	return "Item/ItemType"
+	return "item_types"
 }
 
 func (md *ItemType) SetReference() uint {

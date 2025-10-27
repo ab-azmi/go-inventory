@@ -9,7 +9,7 @@ type ItemCategory struct {
 }
 
 func (ItemCategory) TableName() string {
-	return "Item/ItemCategory"
+	return "item_categories"
 }
 
 func (md *ItemCategory) SetReference() uint {
