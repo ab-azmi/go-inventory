@@ -1,13 +1,15 @@
 package web
 
 import (
-	"github.com/gorilla/mux"
 	"service/internal/app/api/web/handler"
+	ItemHandler "service/internal/app/api/web/handler/Item"
+
+	"github.com/gorilla/mux"
 )
 
 func Register(router *mux.Router) {
 	activityRouter(router)
-	testingRouter(router) // TODO: Hanya contoh. nanti langsung hapus saja
+	itemRouter(router)
 }
 
 func activityRouter(router *mux.Router) {
@@ -21,4 +23,9 @@ func testingRouter(router *mux.Router) {
 	router.HandleFunc("/testings", testingHandler.Create).Methods("POST")
 	router.HandleFunc("/testings/upload/file", testingHandler.UploadByFile).Methods("POST")
 	router.HandleFunc("/testings/upload/content", testingHandler.UploadByContent).Methods("POST")
+}
+
+func itemRouter(router *mux.Router) {
+	var itemHandler ItemHandler.ItemHandler
+	router.HandleFunc("/items", itemHandler.Get).Methods("GET")
 }
