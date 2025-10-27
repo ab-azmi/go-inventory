@@ -1,0 +1,16 @@
+package Item
+
+import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+
+type ItemBrand struct {
+	xtrememodel.BaseModel
+	Name string `gorm:"column:name;type:varchar(255);not null"`
+}
+
+func (ItemBrand) TableName() string {
+	return "Item/ItemBrand"
+}
+
+func (md *ItemBrand) SetReference() uint {
+	return md.ID
+}
