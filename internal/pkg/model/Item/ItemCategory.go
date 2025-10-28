@@ -1,6 +1,8 @@
 package Item
 
-import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+import (
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+)
 
 type ItemCategory struct {
 	xtrememodel.BaseModel
@@ -12,11 +14,11 @@ func (ItemCategory) TableName() string {
 	return "item_categories"
 }
 
-func (md *ItemCategory) SetReference() uint {
+func (md ItemCategory) SetReference() uint {
 	return md.ID
 }
 
-func (ItemCategory) ErrorName() string {
+func (ItemCategory) FeatureName() string {
 	return "Item Category"
 }
 

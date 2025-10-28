@@ -12,6 +12,11 @@ func ErrXtremeSettingGet(name string, internalMsg string) {
 	xtremeres.Error(http.StatusNotFound, message, internalMsg, false, nil)
 }
 
+func ErrXtremeSettingCreate(name string, internalMsg string) {
+	message := fmt.Sprintf("Unable to create %s", name)
+	xtremeres.Error(http.StatusInternalServerError, message, internalMsg, false, nil)
+}
+
 func ErrXtremeSettingDelete(name string, internalMsg string) {
 	message := fmt.Sprintf("Unable to delete %s", name)
 	xtremeres.Error(http.StatusInternalServerError, message, internalMsg, false, nil)

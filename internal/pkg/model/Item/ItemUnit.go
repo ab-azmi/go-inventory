@@ -17,11 +17,11 @@ func (ItemUnit) TableName() string {
 	return "item_units"
 }
 
-func (md *ItemUnit) SetReference() uint {
+func (md ItemUnit) SetReference() uint {
 	return md.ID
 }
 
-func (ItemUnit) ErrorName() string {
+func (ItemUnit) FeatureName() string {
 	return "Item Unit"
 }
 

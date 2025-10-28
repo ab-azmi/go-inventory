@@ -37,4 +37,5 @@ func settingRouter(router *mux.Router) {
 
 	var itemTypeHandler SettingHandler.ItemTypeHandler
 	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
+	router.HandleFunc("/item-types", itemTypeHandler.Create).Methods("POST")
 }

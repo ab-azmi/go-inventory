@@ -2,9 +2,12 @@ package setting
 
 import (
 	"net/http"
+	ActivityRepository "service/internal/activity/repository"
+	SettingForm "service/internal/pkg/form/setting"
 	ItemModel "service/internal/pkg/model/Item"
 	SettingParser "service/internal/pkg/parser/Setting"
 	SettingRepo "service/internal/setting/repository"
+	SettingService "service/internal/setting/service"
 
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
 )
@@ -19,4 +22,19 @@ func (hlr *ItemTypeHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
+}
+
+func (hlr *ItemTypeHandler) Create(w http.ResponseWriter, r *http.Request) {
+	form := SettingForm.ItemTypeForm{}
+	form.APIParse(r)
+	form.Validate()
+
+	srv := SettingService.NewSettingService[ItemModel.ItemType]()
+	srv.SetActivityRepository(ActivityRepository.NewActivityRepository())
+
+	itemType := srv.Create(form)
+
+	parser := SettingParser.SettingParser[ItemModel.ItemType]{Object: itemType}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }

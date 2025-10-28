@@ -11,11 +11,11 @@ func (ItemBrand) TableName() string {
 	return "item_brands"
 }
 
-func (md *ItemBrand) SetReference() uint {
+func (md ItemBrand) SetReference() uint {
 	return md.ID
 }
 
-func (ItemBrand) ErrorName() string {
+func (ItemBrand) FeatureName() string {
 	return "Item Brand"
 }
 

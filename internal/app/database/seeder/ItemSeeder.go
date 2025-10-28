@@ -38,7 +38,6 @@ func (seed *ItemSeeder) getItemData(rows uint) []ItemModel.Item {
 	for i := uint(1); i < rows; i++ {
 		items = append(items, ItemModel.Item{
 			BaseModelUUID: xtrememodel.BaseModelUUID{
-				ID:        i,
 				UUID:      gofakeit.UUID(),
 				Timezone:  "Asia/Makassar",
 				CreatedAt: time.Now(),
@@ -68,7 +67,6 @@ func (seed *ItemSeeder) getBrandData(rows uint) []ItemModel.ItemBrand {
 		brands = append(brands, ItemModel.ItemBrand{
 			Name: gofakeit.LastName(),
 			BaseModel: xtrememodel.BaseModel{
-				ID:        i,
 				Timezone:  "Asia/Makassar",
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
@@ -86,7 +84,6 @@ func (seed *ItemSeeder) getTypeData(rows uint) []ItemModel.ItemType {
 		types = append(types, ItemModel.ItemType{
 			Name: gofakeit.LastName(),
 			BaseModel: xtrememodel.BaseModel{
-				ID:        i,
 				Timezone:  "Asia/Makassar",
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
@@ -110,7 +107,6 @@ func (seed *ItemSeeder) getUnitData(rows uint) []ItemModel.ItemUnit {
 			CreatedBy:     core.StrPtr(gofakeit.UUID()),
 			CreatedByName: core.StrPtr(gofakeit.Name()),
 			BaseModel: xtrememodel.BaseModel{
-				ID:        i,
 				Timezone:  "Asia/Makassar",
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
@@ -129,7 +125,6 @@ func (seed *ItemSeeder) getCategoryData(rows uint) []ItemModel.ItemCategory {
 			Name:      gofakeit.LastName(),
 			IsForSale: gofakeit.Bool(),
 			BaseModel: xtrememodel.BaseModel{
-				ID:        i,
 				Timezone:  "Asia/Makassar",
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
