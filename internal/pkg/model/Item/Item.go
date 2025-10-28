@@ -8,7 +8,7 @@ type Item struct {
 	CategoryId    uint    `gorm:"column:categoryId;type:bigint;not null"`
 	UnitId        uint    `gorm:"column:unitId;type:bigint;not null"`
 	BrandId       *uint   `gorm:"column:brandId;type:bigint"`
-	SKU           string  `gorm:"column:SKU;type:varchar(20);not null"`
+	SKU           string  `gorm:"column:\"SKU\";type:varchar(20);not null"`
 	Name          string  `gorm:"column:name;type:varchar(255);not null"`
 	IsForSale     bool    `gorm:"column:isForSale;default:false;not null"`
 	IsQualified   bool    `gorm:"column:isQualified;default:false;not null"`

@@ -39,3 +39,11 @@ func RandInt(min, max int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(max-min+1) + min
 }
+
+func StrPtr(str string) *string {
+	return &str
+}
+
+func UintPtr(num uint) *uint {
+	return &num
+}

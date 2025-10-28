@@ -24,7 +24,8 @@ type itemRepository struct {
 }
 
 func (repo itemRepository) Find(parameters url.Values) ([]ItemModel.Item, interface{}, error) {
-	query := repo.filterByParam(parameters)
+	query := repo.filterByParam(parameters).Preload("Type").Preload("Category").Preload("Brand").Preload("Unit")
+
 	items, pagination, err := xtrememodel.Paginate(query.Order("id DESC"), parameters, ItemModel.Item{})
 	if err != nil {
 		return nil, nil, err
@@ -40,10 +41,7 @@ func (repo itemRepository) filterByParam(parameters url.Values) *gorm.DB {
 
 	if searchReq := parameters.Get("search"); len(searchReq) > 3 {
 		searchVal := "%" + searchReq + "%"
-		query = query.Where(`
-			name LIKE @search OR
-			SKU LIKE @search`,
-			sql.Named("search", searchVal))
+		query = query.Where(`name ILIKE @search OR "SKU" ILIKE @search`, sql.Named("search", searchVal))
 	}
 
 	return query

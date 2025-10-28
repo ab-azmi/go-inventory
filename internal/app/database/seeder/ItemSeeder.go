@@ -2,6 +2,7 @@ package seeder
 
 import (
 	"service/internal/pkg/config"
+	"service/internal/pkg/core"
 	ItemModel "service/internal/pkg/model/Item"
 	"time"
 
@@ -31,14 +32,6 @@ func (seed *ItemSeeder) Seed() {
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&items, batchSize)
 }
 
-func (seed *ItemSeeder) strPtr(str string) *string {
-	return &str
-}
-
-func (seed *ItemSeeder) uintPtr(num uint) *uint {
-	return &num
-}
-
 func (seed *ItemSeeder) getItemData(rows uint) []ItemModel.Item {
 	var items []ItemModel.Item
 
@@ -54,14 +47,14 @@ func (seed *ItemSeeder) getItemData(rows uint) []ItemModel.Item {
 			TypeId:        gofakeit.RandomUint([]uint{1, 2, 3, 4, 5}),
 			CategoryId:    gofakeit.RandomUint([]uint{1, 2, 3, 4, 5}),
 			UnitId:        gofakeit.RandomUint([]uint{1, 2, 3, 4, 5}),
-			BrandId:       seed.uintPtr(gofakeit.RandomUint([]uint{1, 2, 3, 4, 5})),
+			BrandId:       core.UintPtr(gofakeit.RandomUint([]uint{1, 2, 3, 4, 5})),
 			Name:          gofakeit.ProductName(),
 			SKU:           gofakeit.DigitN(20),
 			IsForSale:     gofakeit.Bool(),
 			IsQualified:   gofakeit.Bool(),
 			PurchasedCost: gofakeit.Price(5, 70),
-			CreatedBy:     seed.strPtr(gofakeit.UUID()),
-			CreatedByName: seed.strPtr(gofakeit.FirstName()),
+			CreatedBy:     core.StrPtr(gofakeit.UUID()),
+			CreatedByName: core.StrPtr(gofakeit.FirstName()),
 		})
 	}
 
@@ -114,8 +107,8 @@ func (seed *ItemSeeder) getUnitData(rows uint) []ItemModel.ItemUnit {
 			Abbreviation:  gofakeit.RandomString(symbols),
 			Type:          gofakeit.FirstName(),
 			IsBaseUnit:    gofakeit.Bool(),
-			CreatedBy:     seed.strPtr(gofakeit.UUID()),
-			CreatedByName: seed.strPtr(gofakeit.Name()),
+			CreatedBy:     core.StrPtr(gofakeit.UUID()),
+			CreatedByName: core.StrPtr(gofakeit.Name()),
 			BaseModel: xtrememodel.BaseModel{
 				ID:        i,
 				Timezone:  "Asia/Makassar",
