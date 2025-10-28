@@ -1,6 +1,8 @@
 package Item
 
 import (
+	SettingForm "service/internal/pkg/form/setting"
+
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 )
 
@@ -27,5 +29,12 @@ func (ic ItemCategory) GetArrayFields() map[string]interface{} {
 		"id":        ic.ID,
 		"name":      ic.Name,
 		"isForSale": ic.IsForSale,
+	}
+}
+
+func (ItemCategory) ParseForm(form SettingForm.ItemCategoryForm) ItemCategory {
+	return ItemCategory{
+		Name:      form.Name,
+		IsForSale: form.IsForSale,
 	}
 }

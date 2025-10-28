@@ -1,6 +1,10 @@
 package Item
 
-import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+import (
+	SettingForm "service/internal/pkg/form/setting"
+
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+)
 
 type ItemUnit struct {
 	xtrememodel.BaseModel
@@ -30,5 +34,15 @@ func (unit ItemUnit) GetArrayFields() map[string]interface{} {
 		"id":           unit.ID,
 		"name":         unit.Name,
 		"abbreviation": unit.Abbreviation,
+	}
+}
+
+func (ItemUnit) ParseForm(form SettingForm.ItemUnitForm) ItemUnit {
+	return ItemUnit{
+		Name:         form.Name,
+		Abbreviation: form.Abbreviation,
+		Type:         form.Type,
+		IsBaseUnit:   form.IsBaseUnit,
+		Conversion:   form.Conversion,
 	}
 }
