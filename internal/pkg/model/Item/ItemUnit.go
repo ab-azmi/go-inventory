@@ -20,3 +20,15 @@ func (ItemUnit) TableName() string {
 func (md *ItemUnit) SetReference() uint {
 	return md.ID
 }
+
+func (ItemUnit) ErrorName() string {
+	return "Item Unit"
+}
+
+func (unit ItemUnit) GetArrayFields() map[string]interface{} {
+	return map[string]interface{}{
+		"id":           unit.ID,
+		"name":         unit.Name,
+		"abbreviation": unit.Abbreviation,
+	}
+}

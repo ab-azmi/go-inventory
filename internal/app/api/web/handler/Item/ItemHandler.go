@@ -14,8 +14,8 @@ func (hlr ItemHandler) Get(w http.ResponseWriter, r *http.Request) {
 	repo := ItemRepo.NewItemRepository()
 	items, pagination, _ := repo.Find(r.URL.Query())
 
-	parsed := ItemParser.ItemParser{Array: items}
+	parser := ItemParser.ItemParser{Array: items}
 
-	response := xtremeres.Response{Array: parsed.Get(), Pagination: &pagination}
+	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
 }

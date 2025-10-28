@@ -15,3 +15,15 @@ func (ItemCategory) TableName() string {
 func (md *ItemCategory) SetReference() uint {
 	return md.ID
 }
+
+func (ItemCategory) ErrorName() string {
+	return "Item Category"
+}
+
+func (ic ItemCategory) GetArrayFields() map[string]interface{} {
+	return map[string]interface{}{
+		"id":        ic.ID,
+		"name":      ic.Name,
+		"isForSale": ic.IsForSale,
+	}
+}

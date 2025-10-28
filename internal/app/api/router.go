@@ -2,10 +2,11 @@ package api
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"os"
 	"service/internal/app/api/mobile"
 	"service/internal/app/api/web"
+
+	"github.com/gorilla/mux"
 )
 
 func Register(router *mux.Router) {

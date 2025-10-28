@@ -14,3 +14,14 @@ func (ItemBrand) TableName() string {
 func (md *ItemBrand) SetReference() uint {
 	return md.ID
 }
+
+func (ItemBrand) ErrorName() string {
+	return "Item Brand"
+}
+
+func (ib ItemBrand) GetArrayFields() map[string]interface{} {
+	return map[string]interface{}{
+		"id":   ib.ID,
+		"name": ib.Name,
+	}
+}

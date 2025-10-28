@@ -3,6 +3,7 @@ package web
 import (
 	"service/internal/app/api/web/handler"
 	ItemHandler "service/internal/app/api/web/handler/Item"
+	SettingHandler "service/internal/app/api/web/handler/Setting"
 
 	"github.com/gorilla/mux"
 )
@@ -10,6 +11,7 @@ import (
 func Register(router *mux.Router) {
 	activityRouter(router)
 	itemRouter(router)
+	settingRouter(router)
 }
 
 func activityRouter(router *mux.Router) {
@@ -28,4 +30,11 @@ func testingRouter(router *mux.Router) {
 func itemRouter(router *mux.Router) {
 	var itemHandler ItemHandler.ItemHandler
 	router.HandleFunc("/items", itemHandler.Get).Methods("GET")
+}
+
+func settingRouter(router *mux.Router) {
+	router = router.PathPrefix("/settings").Subrouter()
+
+	var itemTypeHandler SettingHandler.ItemTypeHandler
+	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
 }
