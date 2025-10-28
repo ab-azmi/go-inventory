@@ -34,6 +34,9 @@ func (unit ItemUnit) GetArrayFields() map[string]interface{} {
 		"id":           unit.ID,
 		"name":         unit.Name,
 		"abbreviation": unit.Abbreviation,
+		"type":         unit.Type,
+		"isBaseUnit":   unit.IsBaseUnit,
+		"Conversion":   unit.Conversion,
 	}
 }
 

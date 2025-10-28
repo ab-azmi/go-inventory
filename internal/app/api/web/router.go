@@ -38,4 +38,16 @@ func settingRouter(router *mux.Router) {
 	var itemTypeHandler SettingHandler.ItemTypeHandler
 	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
 	router.HandleFunc("/item-types", itemTypeHandler.Create).Methods("POST")
+
+	var itemBrandHandler SettingHandler.ItemBrandHandler
+	router.HandleFunc("/item-brands", itemBrandHandler.Get).Methods("GET")
+	router.HandleFunc("/item-brands", itemBrandHandler.Create).Methods("POST")
+
+	var itemUnitHandler SettingHandler.ItemUnitHandler
+	router.HandleFunc("/item-units", itemUnitHandler.Get).Methods("GET")
+	router.HandleFunc("/item-units", itemUnitHandler.Create).Methods("POST")
+
+	var itemCategoryHandler SettingHandler.ItemCategoryHandler
+	router.HandleFunc("/item-categories", itemCategoryHandler.Get).Methods("GET")
+	router.HandleFunc("/item-categories", itemCategoryHandler.Create).Methods("POST")
 }
