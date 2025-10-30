@@ -38,16 +38,24 @@ func settingRouter(router *mux.Router) {
 	var itemTypeHandler SettingHandler.ItemTypeHandler
 	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
 	router.HandleFunc("/item-types", itemTypeHandler.Create).Methods("POST")
+	router.HandleFunc("/item-types/{id}", itemTypeHandler.Update).Methods("PUT")
+	router.HandleFunc("/item-types/{id}", itemTypeHandler.Delete).Methods("DELETE")
 
 	var itemBrandHandler SettingHandler.ItemBrandHandler
 	router.HandleFunc("/item-brands", itemBrandHandler.Get).Methods("GET")
 	router.HandleFunc("/item-brands", itemBrandHandler.Create).Methods("POST")
+	router.HandleFunc("/item-brands/{id}", itemBrandHandler.Update).Methods("PUT")
+	router.HandleFunc("/item-brands/{id}", itemBrandHandler.Delete).Methods("DELETE")
 
 	var itemUnitHandler SettingHandler.ItemUnitHandler
 	router.HandleFunc("/item-units", itemUnitHandler.Get).Methods("GET")
 	router.HandleFunc("/item-units", itemUnitHandler.Create).Methods("POST")
+	router.HandleFunc("/item-units/{id}", itemUnitHandler.Update).Methods("PUT")
+	router.HandleFunc("/item-units/{id}", itemUnitHandler.Delete).Methods("DELETE")
 
 	var itemCategoryHandler SettingHandler.ItemCategoryHandler
 	router.HandleFunc("/item-categories", itemCategoryHandler.Get).Methods("GET")
 	router.HandleFunc("/item-categories", itemCategoryHandler.Create).Methods("POST")
+	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Update).Methods("PUT")
+	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Delete).Methods("DELETE")
 }

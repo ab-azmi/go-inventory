@@ -21,6 +21,7 @@ type SettingRepository[T SettingModel] interface {
 	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) T
 	Delete(model T)
 	Create(model T) T
+	Update(model T) T
 }
 
 func NewSettingRepository[T SettingModel](args ...*gorm.DB) SettingRepository[T] {
@@ -84,7 +85,7 @@ func (repo *settingRepository[T]) Create(model T) T {
 }
 
 func (repo *settingRepository[T]) Update(model T) T {
-	err := repo.transaction.Updates(&model).Error
+	err := repo.transaction.Model(&model).Updates(&model).Error
 	if err != nil {
 		xtremeErr.ErrXtremeSettingUpdate(model.FeatureName(), err.Error())
 	}

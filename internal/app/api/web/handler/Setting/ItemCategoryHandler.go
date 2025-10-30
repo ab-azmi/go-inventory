@@ -26,6 +26,18 @@ func (hlr *ItemCategoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (hlr *ItemCategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 	form := &SettingForm.ItemCategoryForm{}
 
-	srv := SettingService.NewSettingService[ItemModel.ItemCategory]()
+	srv := SettingService.NewSettingService[ItemModel.ItemCategory](r)
 	srv.Create(w, r, form)
+}
+
+func (hlr *ItemCategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
+	form := &SettingForm.ItemCategoryForm{}
+
+	srv := SettingService.NewSettingService[ItemModel.ItemCategory](r)
+	srv.Update(w, r, form)
+}
+
+func (hlr *ItemCategoryHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	srv := SettingService.NewSettingService[ItemModel.ItemCategory](r)
+	srv.Delete(w, r)
 }

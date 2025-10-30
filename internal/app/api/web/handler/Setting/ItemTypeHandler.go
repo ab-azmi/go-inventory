@@ -25,8 +25,20 @@ func (hlr *ItemTypeHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (hlr *ItemTypeHandler) Create(w http.ResponseWriter, r *http.Request) {
 	form := &SettingForm.ItemTypeForm{}
-	srv := SettingService.NewSettingService[ItemModel.ItemType]()
 
+	srv := SettingService.NewSettingService[ItemModel.ItemType](nil)
 	srv.Create(w, r, form)
 
+}
+
+func (hlr *ItemTypeHandler) Update(w http.ResponseWriter, r *http.Request) {
+	form := &SettingForm.ItemTypeForm{}
+
+	srv := SettingService.NewSettingService[ItemModel.ItemType](r)
+	srv.Update(w, r, form)
+}
+
+func (hlr *ItemTypeHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	srv := SettingService.NewSettingService[ItemModel.ItemType](r)
+	srv.Delete(w, r)
 }

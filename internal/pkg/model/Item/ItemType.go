@@ -30,8 +30,11 @@ func (it ItemType) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemType) ParseForm(form *SettingForm.ItemTypeForm) ItemType {
+func (it ItemType) ParseForm(form *SettingForm.ItemTypeForm) ItemType {
 	return ItemType{
+		BaseModel: xtrememodel.BaseModel{
+			ID: it.ID,
+		},
 		Name: form.Name,
 	}
 }

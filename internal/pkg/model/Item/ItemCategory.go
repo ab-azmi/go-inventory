@@ -32,8 +32,11 @@ func (ic ItemCategory) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemCategory) ParseForm(form *SettingForm.ItemCategoryForm) ItemCategory {
+func (ic ItemCategory) ParseForm(form *SettingForm.ItemCategoryForm) ItemCategory {
 	return ItemCategory{
+		BaseModel: xtrememodel.BaseModel{
+			ID: ic.ID,
+		},
 		Name:      form.Name,
 		IsForSale: form.IsForSale,
 	}

@@ -2,7 +2,6 @@ package setting
 
 import (
 	"net/http"
-	ActivityRepository "service/internal/activity/repository"
 	SettingForm "service/internal/pkg/form/setting"
 	ItemModel "service/internal/pkg/model/Item"
 	SettingParser "service/internal/pkg/parser/Setting"
@@ -27,8 +26,18 @@ func (hlr *ItemBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (hlr *ItemBrandHandler) Create(w http.ResponseWriter, r *http.Request) {
 	form := &SettingForm.ItemBrandForm{}
 
-	srv := SettingService.NewSettingService[ItemModel.ItemBrand]()
-	srv.SetActivityRepository(ActivityRepository.NewActivityRepository())
-
+	srv := SettingService.NewSettingService[ItemModel.ItemBrand](nil)
 	srv.Create(w, r, form)
+}
+
+func (hlr *ItemBrandHandler) Update(w http.ResponseWriter, r *http.Request) {
+	form := &SettingForm.ItemBrandForm{}
+
+	srv := SettingService.NewSettingService[ItemModel.ItemBrand](r)
+	srv.Update(w, r, form)
+}
+
+func (hlr *ItemBrandHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	srv := SettingService.NewSettingService[ItemModel.ItemBrand](r)
+	srv.Delete(w, r)
 }

@@ -30,8 +30,11 @@ func (ib ItemBrand) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemBrand) ParseForm(form *SettingForm.ItemBrandForm) ItemBrand {
+func (ib ItemBrand) ParseForm(form *SettingForm.ItemBrandForm) ItemBrand {
 	return ItemBrand{
+		BaseModel: xtrememodel.BaseModel{
+			ID: ib.ID,
+		},
 		Name: form.Name,
 	}
 }
