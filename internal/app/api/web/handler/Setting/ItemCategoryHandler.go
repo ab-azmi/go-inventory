@@ -2,7 +2,6 @@ package setting
 
 import (
 	"net/http"
-	ActivityRepository "service/internal/activity/repository"
 	SettingForm "service/internal/pkg/form/setting"
 	ItemModel "service/internal/pkg/model/Item"
 	SettingParser "service/internal/pkg/parser/Setting"
@@ -25,16 +24,8 @@ func (hlr *ItemCategoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (hlr *ItemCategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := SettingForm.ItemCategoryForm{}
-	form.APIParse(r)
-	form.Validate()
+	form := &SettingForm.ItemCategoryForm{}
 
 	srv := SettingService.NewSettingService[ItemModel.ItemCategory]()
-	srv.SetActivityRepository(ActivityRepository.NewActivityRepository())
-
-	ItemCategory := srv.Create(form)
-
-	parser := SettingParser.SettingParser[ItemModel.ItemCategory]{Object: ItemCategory}
-	res := xtremeres.Response{Object: parser.First()}
-	res.Success(w)
+	srv.Create(w, r, form)
 }

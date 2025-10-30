@@ -58,14 +58,6 @@ func (repo *settingRepository[T]) Find(parameter url.Values) ([]T, interface{}, 
 	return objects, pagination, nil
 }
 
-func (repo *settingRepository[T]) Delete(model T) {
-	err := repo.transaction.Delete(&model).Error
-
-	if err != nil {
-		xtremeErr.ErrXtremeSettingDelete(model.FeatureName(), err.Error())
-	}
-}
-
 func (repo *settingRepository[T]) FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) T {
 	var model T
 
@@ -89,4 +81,21 @@ func (repo *settingRepository[T]) Create(model T) T {
 	}
 
 	return model
+}
+
+func (repo *settingRepository[T]) Update(model T) T {
+	err := repo.transaction.Updates(&model).Error
+	if err != nil {
+		xtremeErr.ErrXtremeSettingUpdate(model.FeatureName(), err.Error())
+	}
+
+	return model
+}
+
+func (repo *settingRepository[T]) Delete(model T) {
+	err := repo.transaction.Delete(&model).Error
+
+	if err != nil {
+		xtremeErr.ErrXtremeSettingDelete(model.FeatureName(), err.Error())
+	}
 }

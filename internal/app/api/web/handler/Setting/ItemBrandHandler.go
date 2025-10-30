@@ -25,16 +25,10 @@ func (hlr *ItemBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (hlr *ItemBrandHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := SettingForm.ItemBrandForm{}
-	form.APIParse(r)
-	form.Validate()
+	form := &SettingForm.ItemBrandForm{}
 
 	srv := SettingService.NewSettingService[ItemModel.ItemBrand]()
 	srv.SetActivityRepository(ActivityRepository.NewActivityRepository())
 
-	ItemBrand := srv.Create(form)
-
-	parser := SettingParser.SettingParser[ItemModel.ItemBrand]{Object: ItemBrand}
-	res := xtremeres.Response{Object: parser.First()}
-	res.Success(w)
+	srv.Create(w, r, form)
 }

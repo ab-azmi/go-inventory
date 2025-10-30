@@ -30,7 +30,7 @@ func (it ItemType) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemType) ParseForm(form SettingForm.ItemTypeForm) ItemType {
+func (ItemType) ParseForm(form *SettingForm.ItemTypeForm) ItemType {
 	return ItemType{
 		Name: form.Name,
 	}

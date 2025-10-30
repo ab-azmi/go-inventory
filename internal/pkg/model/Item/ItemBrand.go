@@ -30,7 +30,7 @@ func (ib ItemBrand) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemBrand) ParseForm(form SettingForm.ItemBrandForm) ItemBrand {
+func (ItemBrand) ParseForm(form *SettingForm.ItemBrandForm) ItemBrand {
 	return ItemBrand{
 		Name: form.Name,
 	}

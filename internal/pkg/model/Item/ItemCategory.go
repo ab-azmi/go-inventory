@@ -32,7 +32,7 @@ func (ic ItemCategory) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemCategory) ParseForm(form SettingForm.ItemCategoryForm) ItemCategory {
+func (ItemCategory) ParseForm(form *SettingForm.ItemCategoryForm) ItemCategory {
 	return ItemCategory{
 		Name:      form.Name,
 		IsForSale: form.IsForSale,

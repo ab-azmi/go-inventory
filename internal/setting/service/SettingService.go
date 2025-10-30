@@ -2,38 +2,47 @@ package setting
 
 import (
 	"fmt"
+	"net/http"
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/constant"
+	SettingParser "service/internal/pkg/parser/Setting"
 	"service/internal/pkg/port"
 	"service/internal/setting/repository"
 
+	xtremeres "github.com/globalxtreme/go-core/v2/response"
 	"gorm.io/gorm"
 )
 
-type HasSettingService[T repository.SettingModel, F any] interface {
+type HasSettingForm interface {
+	Validate()
+	APIParse(r *http.Request)
+}
+
+type HasSettingService[T repository.SettingModel, F HasSettingForm] interface {
 	ParseForm(form F) T
 	TableName() string
 	SetReference() uint
+	GetArrayFields() map[string]interface{}
 }
 
-type ParsableSettingModel[T repository.SettingModel, F any] interface {
+type HasSettingModel[T repository.SettingModel, F HasSettingForm] interface {
 	repository.SettingModel
 	HasSettingService[T, F]
 }
 
-type SettingService[T ParsableSettingModel[T, F], F any] interface {
+type SettingService[T HasSettingModel[T, F], F HasSettingForm] interface {
 	SetTransaction(tx *gorm.DB)
 	SetActivityRepository(repo port.ActivityRepository)
 
-	Create(form F) T
+	Create(w http.ResponseWriter, r *http.Request, form F)
 }
 
-func NewSettingService[T ParsableSettingModel[T, F], F any]() SettingService[T, F] {
+func NewSettingService[T HasSettingModel[T, F], F HasSettingForm]() SettingService[T, F] {
 	return &settingService[T, F]{}
 }
 
-type settingService[T ParsableSettingModel[T, F], F any] struct {
+type settingService[T HasSettingModel[T, F], F HasSettingForm] struct {
 	tx *gorm.DB
 
 	repository   repository.SettingRepository[T]
@@ -48,8 +57,11 @@ func (srv *settingService[T, F]) SetActivityRepository(repo port.ActivityReposit
 	srv.activityRepo = repo
 }
 
-func (srv *settingService[T, F]) Create(form F) T {
+func (srv *settingService[T, F]) Create(w http.ResponseWriter, r *http.Request, form F) {
 	var model T
+
+	form.APIParse(r)
+	form.Validate()
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingRepository[T](tx)
@@ -62,5 +74,7 @@ func (srv *settingService[T, F]) Create(form F) T {
 		return nil
 	})
 
-	return model
+	parser := SettingParser.SettingParser[T]{Object: model}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }

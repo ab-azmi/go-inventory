@@ -40,7 +40,7 @@ func (unit ItemUnit) GetArrayFields() map[string]interface{} {
 	}
 }
 
-func (ItemUnit) ParseForm(form SettingForm.ItemUnitForm) ItemUnit {
+func (ItemUnit) ParseForm(form *SettingForm.ItemUnitForm) ItemUnit {
 	return ItemUnit{
 		Name:         form.Name,
 		Abbreviation: form.Abbreviation,
