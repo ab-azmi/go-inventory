@@ -10,5 +10,6 @@ func Migrations() []xtremedb.Migration {
 	return []xtremedb.Migration{
 		&migration.Activity_1726651211960757{},
 		&migration.Item{},
+		&migration.ItemWarehouse_1761804063029332{},
 	}
 }
