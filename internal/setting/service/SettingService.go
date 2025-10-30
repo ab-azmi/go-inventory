@@ -115,7 +115,7 @@ func (srv *settingService[T, F]) Update(w http.ResponseWriter, r *http.Request, 
 
 		parser.Object = srv.model
 
-		updateActivity.SetReference(srv.model).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE).
+		updateActivity.SetReference(srv.model).SetParser(&parser).SetNewProperty(constant.ACTION_UPDATE).
 			Save(fmt.Sprintf("Updated %s", srv.model.FeatureName()))
 
 		return nil

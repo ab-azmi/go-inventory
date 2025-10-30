@@ -27,7 +27,7 @@ func (parser *SettingParser[T]) First() interface{} {
 }
 
 func (parser *SettingParser[T]) CreateActivity(action string) interface{} {
-	return nil
+	return parser.Object.GetArrayFields()
 }
 
 func (parser *SettingParser[T]) UpdateActivity(action string) interface{} {
