@@ -1,8 +1,10 @@
 package core
 
 import (
+	"fmt"
 	"math/rand"
 	"net/url"
+	"service/internal/pkg/config"
 	"strings"
 	"time"
 )
@@ -46,4 +48,12 @@ func StrPtr(str string) *string {
 
 func UintPtr(num uint) *uint {
 	return &num
+}
+
+func ArrayStringPtr(arr []string) *[]string {
+	return &arr
+}
+
+func ResetAutoIncrement(tableName string) {
+	config.PgSQL.Exec(fmt.Sprintf("SELECT setval(pg_get_serial_sequence('%s', 'id'), (SELECT MAX(id) FROM %s))", tableName, tableName))
 }

@@ -14,6 +14,7 @@ func Seeder() {
 	seeders := []data{
 		{&seeder.TestingSeeder{}},
 		{&seeder.ItemSeeder{}},
+		{&seeder.ItemWarehouseSeeder{}},
 	}
 
 	for _, seed := range seeders {
