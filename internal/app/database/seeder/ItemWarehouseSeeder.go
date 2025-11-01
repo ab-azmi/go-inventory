@@ -19,6 +19,8 @@ type ItemWarehouseSeeder struct {
 }
 
 func (seed *ItemWarehouseSeeder) Seed() {
+	seed.truncateTables()
+
 	batchSize := 100
 
 	warehouses, warehouseIds := seed.getWarehouseData(8)
@@ -32,7 +34,22 @@ func (seed *ItemWarehouseSeeder) Seed() {
 	seed.seedItemWarehouseWithSN(batchSize, warehouseIds)
 }
 
-func (seed ItemWarehouseSeeder) seedItemWarehouseWithoutSN(batchSize int, warehouseIds []uint) {
+func (seed *ItemWarehouseSeeder) truncateTables() {
+	config.PgSQL.Exec("SET FOREIGN_KEY_CHECKS = 0")
+	result := config.PgSQL.Exec(`TRUNCATE TABLE 
+		item_warehouse_stocks,
+		item_warehouse_serial_numbers,
+		item_warehouse_stock_histories,
+		item_warehouse_serial_number_histories,
+		item_warehouses
+	RESTART IDENTITY CASCADE`)
+	if result.Error != nil {
+		log.Println(result.Error)
+	}
+	config.PgSQL.Exec("SET FOREIGN_KEY_CHECKS = 1")
+}
+
+func (seed *ItemWarehouseSeeder) seedItemWarehouseWithoutSN(batchSize int, warehouseIds []uint) {
 	var itemIds []uint
 	err := config.PgSQL.Model(&ItemModel.Item{}).Where("isTrackSerialNumber", false).Pluck("id", &itemIds).Error
 	if err != nil {
@@ -79,25 +96,27 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseData(itemIds []uint, warehouseI
 	var ids []uint
 
 	for _, i := range itemIds {
-		itemWarehouses = append(itemWarehouses, ItemModel.ItemWarehouse{
-			BaseModelUUID: xtrememodel.BaseModelUUID{
-				ID:        seed.itemWarehouseCounter,
-				UUID:      gofakeit.UUID(),
-				Timezone:  "Asia/Makassar",
-				CreatedAt: time.Now(),
-				UpdatedAt: time.Now(),
-			},
-			WarehouseId:  gofakeit.RandomUint(warehouseIds),
-			ItemId:       i,
-			OrderType:    gofakeit.RandomString(ItemConstant.OrderType.OPTION()),
-			SellingPrice: gofakeit.Product().Price,
-			IsIncludeTax: gofakeit.Bool(),
-			Location:     core.StrPtr(gofakeit.AdverbPlace()),
-		})
+		for _, j := range warehouseIds {
+			itemWarehouses = append(itemWarehouses, ItemModel.ItemWarehouse{
+				BaseModelUUID: xtrememodel.BaseModelUUID{
+					ID:        seed.itemWarehouseCounter,
+					UUID:      gofakeit.UUID(),
+					Timezone:  "Asia/Makassar",
+					CreatedAt: time.Now(),
+					UpdatedAt: time.Now(),
+				},
+				WarehouseId:  j,
+				ItemId:       i,
+				OrderType:    gofakeit.RandomString(ItemConstant.OrderType.OPTION()),
+				SellingPrice: gofakeit.Product().Price,
+				IsIncludeTax: gofakeit.Bool(),
+				Location:     core.StrPtr(gofakeit.AdverbPlace()),
+			})
 
-		ids = append(ids, seed.itemWarehouseCounter)
+			ids = append(ids, seed.itemWarehouseCounter)
 
-		seed.itemWarehouseCounter += 1
+			seed.itemWarehouseCounter += 1
+		}
 	}
 
 	return itemWarehouses, ids
