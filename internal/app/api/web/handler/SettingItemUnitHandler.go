@@ -2,42 +2,64 @@ package handler
 
 import (
 	"net/http"
+	"service/internal/activity/repository"
 	"service/internal/pkg/form"
-	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
-	SettingService "service/internal/setting/service"
+	"service/internal/setting/service"
 
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
+	"github.com/gorilla/mux"
 )
 
 type ItemUnitHandler struct{}
 
 func (hlr *ItemUnitHandler) Get(w http.ResponseWriter, r *http.Request) {
-	repo := SettingRepo.NewSettingRepository[model.ItemUnit]()
-	types, pagination, _ := repo.Find(r.URL.Query())
+	repo := SettingRepo.NewSettingItemUnitRepository()
+	units, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := parser.SettingParser[model.ItemUnit]{Array: types}
+	parser := parser.SettingItemUnitParser{Array: units}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
 }
 
 func (hlr *ItemUnitHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := &form.SettingItemUnitForm{}
+	form := form.SettingItemUnitForm{}
+	form.APIParse(r)
+	form.Validate()
 
-	srv := SettingService.NewSettingService[model.ItemUnit](r)
-	srv.Create(w, r, form)
+	srv := service.NewSettingItemUnitService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	unit := srv.Create(form)
+
+	parser := parser.SettingItemUnitParser{Object: unit}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }
 
 func (hlr *ItemUnitHandler) Update(w http.ResponseWriter, r *http.Request) {
-	form := &form.SettingItemUnitForm{}
+	form := form.SettingItemUnitForm{}
+	form.APIParse(r)
+	form.Validate()
 
-	srv := SettingService.NewSettingService[model.ItemUnit](r)
-	srv.Update(w, r, form)
+	srv := service.NewSettingItemUnitService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	unit := srv.Update(mux.Vars(r)["id"], form)
+
+	parser := parser.SettingItemUnitParser{Object: unit}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }
 
 func (hlr *ItemUnitHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	srv := SettingService.NewSettingService[model.ItemUnit](r)
-	srv.Delete(w, r)
+	srv := service.NewSettingItemUnitService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	srv.Delete(mux.Vars(r)["id"])
+
+	res := xtremeres.Response{}
+	res.Success(w)
 }
