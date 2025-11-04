@@ -1,4 +1,4 @@
-package Item
+package model
 
 import (
 	SettingForm "service/internal/pkg/form/setting"

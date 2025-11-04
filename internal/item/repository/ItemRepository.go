@@ -5,14 +5,14 @@ import (
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
-	ItemModel "service/internal/pkg/model/Item"
+	"service/internal/pkg/model"
 
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 	"gorm.io/gorm"
 )
 
 type ItemRepository interface {
-	Find(parameters url.Values) ([]ItemModel.Item, interface{}, error)
+	Find(parameters url.Values) ([]model.Item, interface{}, error)
 }
 
 func NewItemRepository() ItemRepository {
@@ -23,10 +23,10 @@ type itemRepository struct {
 	Transaction *gorm.DB
 }
 
-func (repo itemRepository) Find(parameters url.Values) ([]ItemModel.Item, interface{}, error) {
+func (repo itemRepository) Find(parameters url.Values) ([]model.Item, interface{}, error) {
 	query := repo.filterByParam(parameters).Preload("Type").Preload("Category").Preload("Brand").Preload("Unit")
 
-	items, pagination, err := xtrememodel.Paginate(query.Order("id DESC"), parameters, ItemModel.Item{})
+	items, pagination, err := xtrememodel.Paginate(query.Order("id DESC"), parameters, model.Item{})
 	if err != nil {
 		return nil, nil, err
 	}

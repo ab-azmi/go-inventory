@@ -1,7 +1,6 @@
-package Item
+package model
 
 import (
-	SettingModel "service/internal/pkg/model/Setting"
 	"time"
 
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
@@ -17,8 +16,8 @@ type ItemWarehouse struct {
 	Location     *string    `gorm:"column:location;type:text"`
 	ActivatedAt  *time.Time `gorm:"column:activatedAt;"`
 
-	Item      Item                   `gorm:"foreignKey:itemId;references:ID"`
-	Warehouse SettingModel.Warehouse `gorm:"foreignKey:warehouseId;references:ID"`
+	Item      Item             `gorm:"foreignKey:itemId;references:ID"`
+	Warehouse SettingWarehouse `gorm:"foreignKey:warehouseId;references:ID"`
 }
 
 func (ItemWarehouse) TableName() string {

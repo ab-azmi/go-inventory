@@ -1,12 +1,12 @@
 package parser
 
 import (
-	ItemModel "service/internal/pkg/model/Item"
+	"service/internal/pkg/model"
 )
 
 type ItemParser struct {
-	Array  []ItemModel.Item
-	Object ItemModel.Item
+	Array  []model.Item
+	Object model.Item
 }
 
 func (parser *ItemParser) Get() []interface{} {

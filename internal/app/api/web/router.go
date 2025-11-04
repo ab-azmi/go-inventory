@@ -2,8 +2,6 @@ package web
 
 import (
 	"service/internal/app/api/web/handler"
-	ItemHandler "service/internal/app/api/web/handler/Item"
-	SettingHandler "service/internal/app/api/web/handler/Setting"
 
 	"github.com/gorilla/mux"
 )
@@ -28,32 +26,32 @@ func testingRouter(router *mux.Router) {
 }
 
 func itemRouter(router *mux.Router) {
-	var itemHandler ItemHandler.ItemHandler
+	var itemHandler handler.ItemHandler
 	router.HandleFunc("/items", itemHandler.Get).Methods("GET")
 }
 
 func settingRouter(router *mux.Router) {
 	router = router.PathPrefix("/settings").Subrouter()
 
-	var itemTypeHandler SettingHandler.ItemTypeHandler
+	var itemTypeHandler handler.ItemTypeHandler
 	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
 	router.HandleFunc("/item-types", itemTypeHandler.Create).Methods("POST")
 	router.HandleFunc("/item-types/{id}", itemTypeHandler.Update).Methods("PUT")
 	router.HandleFunc("/item-types/{id}", itemTypeHandler.Delete).Methods("DELETE")
 
-	var itemBrandHandler SettingHandler.ItemBrandHandler
+	var itemBrandHandler handler.ItemBrandHandler
 	router.HandleFunc("/item-brands", itemBrandHandler.Get).Methods("GET")
 	router.HandleFunc("/item-brands", itemBrandHandler.Create).Methods("POST")
 	router.HandleFunc("/item-brands/{id}", itemBrandHandler.Update).Methods("PUT")
 	router.HandleFunc("/item-brands/{id}", itemBrandHandler.Delete).Methods("DELETE")
 
-	var itemUnitHandler SettingHandler.ItemUnitHandler
+	var itemUnitHandler handler.ItemUnitHandler
 	router.HandleFunc("/item-units", itemUnitHandler.Get).Methods("GET")
 	router.HandleFunc("/item-units", itemUnitHandler.Create).Methods("POST")
 	router.HandleFunc("/item-units/{id}", itemUnitHandler.Update).Methods("PUT")
 	router.HandleFunc("/item-units/{id}", itemUnitHandler.Delete).Methods("DELETE")
 
-	var itemCategoryHandler SettingHandler.ItemCategoryHandler
+	var itemCategoryHandler handler.ItemCategoryHandler
 	router.HandleFunc("/item-categories", itemCategoryHandler.Get).Methods("GET")
 	router.HandleFunc("/item-categories", itemCategoryHandler.Create).Methods("POST")
 	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Update).Methods("PUT")
