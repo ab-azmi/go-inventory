@@ -2,13 +2,15 @@ package handler
 
 import (
 	"net/http"
+	"service/internal/activity/repository"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
-	SettingService "service/internal/setting/service"
+	"service/internal/setting/service"
 
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
+	"github.com/gorilla/mux"
 )
 
 type ItemBrandHandler struct{}
@@ -17,27 +19,48 @@ func (hlr *ItemBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
 	repo := SettingRepo.NewSettingRepository[model.ItemBrand]()
 	types, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := parser.SettingParser[model.ItemBrand]{Array: types}
+	parser := parser.SettingItemBrandParser{Array: types}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
 }
 
 func (hlr *ItemBrandHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := &form.SettingForm{}
+	form := form.SettingForm{}
+	form.APIParse(r)
+	form.Validate()
 
-	srv := SettingService.NewSettingService[model.ItemBrand](nil)
-	srv.Create(w, r, form)
+	srv := service.NewSettingItemBrandService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	brand := srv.Create(form)
+
+	parser := parser.SettingItemBrandParser{Object: brand}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }
 
 func (hlr *ItemBrandHandler) Update(w http.ResponseWriter, r *http.Request) {
-	form := &form.SettingForm{}
+	form := form.SettingForm{}
+	form.APIParse(r)
+	form.Validate()
 
-	srv := SettingService.NewSettingService[model.ItemBrand](r)
-	srv.Update(w, r, form)
+	srv := service.NewSettingItemBrandService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	brand := srv.Update(mux.Vars(r)["id"], form)
+
+	parser := parser.SettingItemBrandParser{Object: brand}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
 }
 
 func (hlr *ItemBrandHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	srv := SettingService.NewSettingService[model.ItemBrand](r)
-	srv.Delete(w, r)
+	srv := service.NewSettingItemBrandService()
+	srv.SetActivityRepository(repository.NewActivityRepository())
+
+	srv.Delete(mux.Vars(r)["id"])
+
+	res := xtremeres.Response{}
+	res.Success(w)
 }
