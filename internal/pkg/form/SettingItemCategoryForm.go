@@ -1,4 +1,4 @@
-package setting
+package form
 
 import (
 	"net/http"
@@ -7,16 +7,16 @@ import (
 	xtrememdw "github.com/globalxtreme/go-core/v2/middleware"
 )
 
-type ItemCategoryForm struct {
+type SettingItemCategoryForm struct {
 	Name      string `json:"name"`
 	IsForSale bool   `json:"isForSale"`
 }
 
-func (rule *ItemCategoryForm) Validate() {
+func (rule *SettingItemCategoryForm) Validate() {
 	va := xtrememdw.Validator{}
 	va.Make(rule)
 }
 
-func (rule *ItemCategoryForm) APIParse(r *http.Request) {
+func (rule *SettingItemCategoryForm) APIParse(r *http.Request) {
 	core.BaseForm{}.APIParse(r, &rule)
 }

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	SettingForm "service/internal/pkg/form/setting"
+	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
@@ -24,14 +24,14 @@ func (hlr *ItemUnitHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (hlr *ItemUnitHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := &SettingForm.ItemUnitForm{}
+	form := &form.SettingItemUnitForm{}
 
 	srv := SettingService.NewSettingService[model.ItemUnit](r)
 	srv.Create(w, r, form)
 }
 
 func (hlr *ItemUnitHandler) Update(w http.ResponseWriter, r *http.Request) {
-	form := &SettingForm.ItemUnitForm{}
+	form := &form.SettingItemUnitForm{}
 
 	srv := SettingService.NewSettingService[model.ItemUnit](r)
 	srv.Update(w, r, form)

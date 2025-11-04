@@ -1,4 +1,4 @@
-package setting
+package form
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	xtrememdw "github.com/globalxtreme/go-core/v2/middleware"
 )
 
-type ItemUnitForm struct {
+type SettingItemUnitForm struct {
 	Name         string `json:"name"`
 	Abbreviation string `json:"abbreviation"`
 	Type         string `json:"type"`
@@ -15,11 +15,11 @@ type ItemUnitForm struct {
 	Conversion   string `json:"conversion"`
 }
 
-func (rule *ItemUnitForm) Validate() {
+func (rule *SettingItemUnitForm) Validate() {
 	va := xtrememdw.Validator{}
 	va.Make(rule)
 }
 
-func (rule *ItemUnitForm) APIParse(r *http.Request) {
+func (rule *SettingItemUnitForm) APIParse(r *http.Request) {
 	core.BaseForm{}.APIParse(r, &rule)
 }
