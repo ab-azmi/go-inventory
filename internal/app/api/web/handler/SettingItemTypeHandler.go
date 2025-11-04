@@ -4,7 +4,7 @@ import (
 	"net/http"
 	SettingForm "service/internal/pkg/form/setting"
 	"service/internal/pkg/model"
-	SettingParser "service/internal/pkg/parser/Setting"
+	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
 	SettingService "service/internal/setting/service"
 
@@ -17,7 +17,7 @@ func (hlr *ItemTypeHandler) Get(w http.ResponseWriter, r *http.Request) {
 	repo := SettingRepo.NewSettingRepository[model.ItemType]()
 	types, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := SettingParser.SettingParser[model.ItemType]{Array: types}
+	parser := parser.SettingParser[model.ItemType]{Array: types}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)

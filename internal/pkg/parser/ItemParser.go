@@ -60,6 +60,8 @@ func (parser *ItemParser) CreateActivity(action string) interface{} {
 
 	return map[string]interface{}{
 		"id":        object.ID,
+		"name":      object.Name,
+		"SKU":       object.SKU,
 		"createdAt": object.CreatedAt.Format("02/01/2006 15:04"),
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/constant"
-	SettingParser "service/internal/pkg/parser/Setting"
+	"service/internal/pkg/parser"
 	"service/internal/pkg/port"
 	"service/internal/setting/repository"
 	"strconv"
@@ -81,7 +81,7 @@ func (srv *settingService[T, F]) Create(w http.ResponseWriter, r *http.Request, 
 	form.APIParse(r)
 	form.Validate()
 
-	var parser SettingParser.SettingParser[T]
+	var parser parser.SettingParser[T]
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingRepository[T](tx)
@@ -105,7 +105,7 @@ func (srv *settingService[T, F]) Update(w http.ResponseWriter, r *http.Request, 
 	form.APIParse(r)
 	form.Validate()
 
-	parser := SettingParser.SettingParser[T]{Object: srv.model}
+	parser := parser.SettingParser[T]{Object: srv.model}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(srv.model).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
