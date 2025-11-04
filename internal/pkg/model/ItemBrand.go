@@ -1,8 +1,6 @@
 package model
 
 import (
-	"service/internal/pkg/form"
-
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 )
 
@@ -23,18 +21,18 @@ func (ItemBrand) FeatureName() string {
 	return "Item Brand"
 }
 
-func (ib ItemBrand) GetArrayFields() map[string]interface{} {
-	return map[string]interface{}{
-		"id":   ib.ID,
-		"name": ib.Name,
-	}
-}
+// func (ib ItemBrand) GetArrayFields() map[string]interface{} {
+// 	return map[string]interface{}{
+// 		"id":   ib.ID,
+// 		"name": ib.Name,
+// 	}
+// }
 
-func (ib ItemBrand) ParseForm(form *form.SettingForm) ItemBrand {
-	return ItemBrand{
-		BaseModel: xtrememodel.BaseModel{
-			ID: ib.ID,
-		},
-		Name: form.Name,
-	}
-}
+// func (ib ItemBrand) ParseForm(form *form.SettingForm) ItemBrand {
+// 	return ItemBrand{
+// 		BaseModel: xtrememodel.BaseModel{
+// 			ID: ib.ID,
+// 		},
+// 		Name: form.Name,
+// 	}
+// }

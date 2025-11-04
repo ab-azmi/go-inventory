@@ -1,8 +1,6 @@
 package model
 
 import (
-	"service/internal/pkg/form"
-
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 )
 
@@ -29,26 +27,26 @@ func (ItemUnit) FeatureName() string {
 	return "Item Unit"
 }
 
-func (unit ItemUnit) GetArrayFields() map[string]interface{} {
-	return map[string]interface{}{
-		"id":           unit.ID,
-		"name":         unit.Name,
-		"abbreviation": unit.Abbreviation,
-		"type":         unit.Type,
-		"isBaseUnit":   unit.IsBaseUnit,
-		"Conversion":   unit.Conversion,
-	}
-}
+// func (unit ItemUnit) GetArrayFields() map[string]interface{} {
+// 	return map[string]interface{}{
+// 		"id":           unit.ID,
+// 		"name":         unit.Name,
+// 		"abbreviation": unit.Abbreviation,
+// 		"type":         unit.Type,
+// 		"isBaseUnit":   unit.IsBaseUnit,
+// 		"Conversion":   unit.Conversion,
+// 	}
+// }
 
-func (unit ItemUnit) ParseForm(form *form.SettingItemUnitForm) ItemUnit {
-	return ItemUnit{
-		BaseModel: xtrememodel.BaseModel{
-			ID: unit.ID,
-		},
-		Name:         form.Name,
-		Abbreviation: form.Abbreviation,
-		Type:         form.Type,
-		IsBaseUnit:   form.IsBaseUnit,
-		Conversion:   form.Conversion,
-	}
-}
+// func (unit ItemUnit) ParseForm(form *form.SettingItemUnitForm) ItemUnit {
+// 	return ItemUnit{
+// 		BaseModel: xtrememodel.BaseModel{
+// 			ID: unit.ID,
+// 		},
+// 		Name:         form.Name,
+// 		Abbreviation: form.Abbreviation,
+// 		Type:         form.Type,
+// 		IsBaseUnit:   form.IsBaseUnit,
+// 		Conversion:   form.Conversion,
+// 	}
+// }
