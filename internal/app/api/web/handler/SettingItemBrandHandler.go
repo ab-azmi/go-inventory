@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"service/internal/activity/repository"
 	"service/internal/pkg/form"
-	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
 	"service/internal/setting/service"
@@ -16,10 +15,10 @@ import (
 type ItemBrandHandler struct{}
 
 func (hlr *ItemBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
-	repo := SettingRepo.NewSettingRepository[model.ItemBrand]()
-	types, pagination, _ := repo.Find(r.URL.Query())
+	repo := SettingRepo.NewSettingItemBrandRepository()
+	brands, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := parser.SettingItemBrandParser{Array: types}
+	parser := parser.SettingItemBrandParser{Array: brands}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
