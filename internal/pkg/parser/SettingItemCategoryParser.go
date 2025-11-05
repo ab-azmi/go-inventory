@@ -25,8 +25,8 @@ func (parser *SettingItemCategoryParser) First() interface{} {
 		"id":        object.ID,
 		"name":      object.Name,
 		"isForSale": object.IsForSale,
-		"createdAt": object.CreatedAt,
-		"updatedAt": object.UpdatedAt,
+		"createdAt": object.CreatedAt.Format("02/01/2006 15:04"),
+		"updatedAt": object.UpdatedAt.Format("02/01/2006 15:04"),
 	}
 }
 

@@ -89,14 +89,14 @@ func (srv *settingItemBrandService) Update(id string, form form.SettingForm) mod
 func (srv *settingItemBrandService) Delete(id string) {
 	brand := srv.prepare(id)
 
+	parser := parser.SettingItemBrandParser{Object: brand}
+
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingItemBrandRepository(tx)
 
 		srv.repository.Delete(brand)
 
-		parser := parser.SettingItemBrandParser{Object: brand}
-
-		activity.UseActivity{}.SetReference(brand).SetParser(&parser).
+		activity.UseActivity{}.SetReference(brand).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
 			Save(fmt.Sprintf("Delete brand: %s", brand.Name))
 
 		return nil

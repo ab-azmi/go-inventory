@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"service/internal/activity/repository"
 	"service/internal/pkg/form"
 	"service/internal/pkg/parser"
 	SettingRepo "service/internal/setting/repository"
@@ -30,7 +29,6 @@ func (hlr *ItemCategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 	form.Validate()
 
 	srv := service.NewSettingItemCategoryService()
-	srv.SetActivityRepository(repository.NewActivityRepository())
 
 	category := srv.Create(form)
 
@@ -45,7 +43,6 @@ func (hlr *ItemCategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
 	form.Validate()
 
 	srv := service.NewSettingItemCategoryService()
-	srv.SetActivityRepository(repository.NewActivityRepository())
 
 	category := srv.Update(mux.Vars(r)["id"], form)
 
@@ -56,7 +53,6 @@ func (hlr *ItemCategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 func (hlr *ItemCategoryHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	srv := service.NewSettingItemCategoryService()
-	srv.SetActivityRepository(repository.NewActivityRepository())
 
 	srv.Delete(mux.Vars(r)["id"])
 

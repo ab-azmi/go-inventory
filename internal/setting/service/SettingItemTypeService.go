@@ -89,14 +89,14 @@ func (srv *settingItemTypeService) Update(id string, form form.SettingForm) mode
 func (srv *settingItemTypeService) Delete(id string) {
 	itemType := srv.prepare(id)
 
+	parser := parser.SettingItemTypeParser{Object: itemType}
+
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingItemTypeRepository(tx)
 
 		srv.repository.Delete(itemType)
 
-		parser := parser.SettingItemTypeParser{Object: itemType}
-
-		activity.UseActivity{}.SetReference(itemType).SetParser(&parser).
+		activity.UseActivity{}.SetReference(itemType).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
 			Save(fmt.Sprintf("Delete Type: %s", itemType.Name))
 
 		return nil

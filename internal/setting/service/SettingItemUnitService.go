@@ -89,14 +89,14 @@ func (srv *settingItemUnitService) Update(id string, form form.SettingItemUnitFo
 func (srv *settingItemUnitService) Delete(id string) {
 	itemUnit := srv.prepare(id)
 
+	parser := parser.SettingItemUnitParser{Object: itemUnit}
+
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingItemUnitRepository(tx)
 
 		srv.repository.Delete(itemUnit)
 
-		parser := parser.SettingItemUnitParser{Object: itemUnit}
-
-		activity.UseActivity{}.SetReference(itemUnit).SetParser(&parser).
+		activity.UseActivity{}.SetReference(itemUnit).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
 			Save(fmt.Sprintf("Delete Unit: %s", itemUnit.Name))
 
 		return nil

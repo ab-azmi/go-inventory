@@ -89,14 +89,14 @@ func (srv *settingItemCategoryService) Update(id string, form form.SettingItemCa
 func (srv *settingItemCategoryService) Delete(id string) {
 	itemCategory := srv.prepare(id)
 
+	parser := parser.SettingItemCategoryParser{Object: itemCategory}
+
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewSettingItemCategoryRepository(tx)
 
 		srv.repository.Delete(itemCategory)
 
-		parser := parser.SettingItemCategoryParser{Object: itemCategory}
-
-		activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).
+		activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
 			Save(fmt.Sprintf("Delete Category: %s", itemCategory.Name))
 
 		return nil

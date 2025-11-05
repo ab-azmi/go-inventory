@@ -28,8 +28,8 @@ func (parser *SettingItemUnitParser) First() interface{} {
 		"type":         object.Type,
 		"isBaseUnit":   object.IsBaseUnit,
 		"conversion":   object.Conversion,
-		"createdAt":    object.CreatedAt,
-		"updatedAt":    object.UpdatedAt,
+		"createdAt":    object.CreatedAt.Format("02/01/2006 15:04"),
+		"updatedAt":    object.UpdatedAt.Format("02/01/2006 15:04"),
 	}
 }
 
