@@ -17,25 +17,3 @@ func (ItemCategory) TableName() string {
 func (md ItemCategory) SetReference() uint {
 	return md.ID
 }
-
-func (ItemCategory) FeatureName() string {
-	return "Item Category"
-}
-
-// func (ic ItemCategory) GetArrayFields() map[string]interface{} {
-// 	return map[string]interface{}{
-// 		"id":        ic.ID,
-// 		"name":      ic.Name,
-// 		"isForSale": ic.IsForSale,
-// 	}
-// }
-
-// func (ic ItemCategory) ParseForm(form *form.SettingItemCategoryForm) ItemCategory {
-// 	return ItemCategory{
-// 		BaseModel: xtrememodel.BaseModel{
-// 			ID: ic.ID,
-// 		},
-// 		Name:      form.Name,
-// 		IsForSale: form.IsForSale,
-// 	}
-// }

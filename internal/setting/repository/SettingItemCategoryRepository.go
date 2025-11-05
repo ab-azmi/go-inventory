@@ -70,7 +70,7 @@ func (repo *settingItemCategoryRepository) FirstById(id uint, args ...func(query
 
 	err := query.First(&itemCategory, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingGet(itemCategory.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemCategoryGet(err.Error())
 	}
 
 	return itemCategory
@@ -84,7 +84,7 @@ func (repo *settingItemCategoryRepository) Create(form form.SettingItemCategoryF
 
 	err := repo.transaction.Create(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingCreate(itemCategory.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemCategoryCreate(err.Error())
 	}
 
 	return itemCategory
@@ -96,7 +96,7 @@ func (repo *settingItemCategoryRepository) Update(itemCategory model.ItemCategor
 
 	err := repo.transaction.Save(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingUpdate(itemCategory.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemCategoryUpdate(err.Error())
 	}
 
 	return itemCategory
@@ -105,6 +105,6 @@ func (repo *settingItemCategoryRepository) Update(itemCategory model.ItemCategor
 func (repo *settingItemCategoryRepository) Delete(itemCategory model.ItemCategory) {
 	err := repo.transaction.Delete(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingDelete(itemCategory.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemCategoryDelete(err.Error())
 	}
 }

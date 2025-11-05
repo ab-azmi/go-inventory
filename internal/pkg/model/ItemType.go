@@ -16,23 +16,3 @@ func (ItemType) TableName() string {
 func (md ItemType) SetReference() uint {
 	return md.ID
 }
-
-func (ItemType) FeatureName() string {
-	return "Item Type"
-}
-
-// func (it ItemType) GetArrayFields() map[string]interface{} {
-// 	return map[string]interface{}{
-// 		"id":   it.ID,
-// 		"name": it.Name,
-// 	}
-// }
-
-// func (it ItemType) ParseForm(form *form.SettingForm) ItemType {
-// 	return ItemType{
-// 		BaseModel: xtrememodel.BaseModel{
-// 			ID: it.ID,
-// 		},
-// 		Name: form.Name,
-// 	}
-// }

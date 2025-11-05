@@ -4,7 +4,6 @@ import (
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
-	xtremeErr "service/internal/pkg/error"
 
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 	"gorm.io/gorm"
@@ -69,7 +68,7 @@ func (repo *settingRepository[T]) FirstById(id uint, args ...func(query *gorm.DB
 
 	err := query.First(&model, "id = ?", id).Error
 	if err != nil {
-		xtremeErr.ErrXtremeSettingGet(model.FeatureName(), err.Error())
+		// xtremeErr.ErrXtremeSettingGet(model.FeatureName(), err.Error())
 	}
 
 	return model
@@ -78,7 +77,7 @@ func (repo *settingRepository[T]) FirstById(id uint, args ...func(query *gorm.DB
 func (repo *settingRepository[T]) Create(model T) T {
 	err := repo.transaction.Create(&model).Error
 	if err != nil {
-		xtremeErr.ErrXtremeSettingCreate(model.FeatureName(), err.Error())
+		// xtremeErr.ErrXtremeSettingCreate(model.FeatureName(), err.Error())
 	}
 
 	return model
@@ -87,7 +86,7 @@ func (repo *settingRepository[T]) Create(model T) T {
 func (repo *settingRepository[T]) Update(model T) T {
 	err := repo.transaction.Model(&model).Updates(&model).Error
 	if err != nil {
-		xtremeErr.ErrXtremeSettingUpdate(model.FeatureName(), err.Error())
+		// xtremeErr.ErrXtremeSettingUpdate(model.FeatureName(), err.Error())
 	}
 
 	return model
@@ -97,6 +96,6 @@ func (repo *settingRepository[T]) Delete(model T) {
 	err := repo.transaction.Delete(&model).Error
 
 	if err != nil {
-		xtremeErr.ErrXtremeSettingDelete(model.FeatureName(), err.Error())
+		// xtremeErr.ErrXtremeSettingDelete(model.FeatureName(), err.Error())
 	}
 }

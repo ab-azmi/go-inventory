@@ -70,7 +70,7 @@ func (repo *settingItemTypeRepository) FirstById(id uint, args ...func(query *go
 
 	err := query.First(&itemType, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingGet(itemType.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemTypeGet(err.Error())
 	}
 
 	return itemType
@@ -83,7 +83,7 @@ func (repo *settingItemTypeRepository) Create(form form.SettingForm) model.ItemT
 
 	err := repo.transaction.Create(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingCreate(itemType.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemTypeCreate(err.Error())
 	}
 
 	return itemType
@@ -94,7 +94,7 @@ func (repo *settingItemTypeRepository) Update(itemType model.ItemType, form form
 
 	err := repo.transaction.Save(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingUpdate(itemType.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemTypeUpdate(err.Error())
 	}
 
 	return itemType
@@ -103,6 +103,6 @@ func (repo *settingItemTypeRepository) Update(itemType model.ItemType, form form
 func (repo *settingItemTypeRepository) Delete(itemType model.ItemType) {
 	err := repo.transaction.Delete(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingDelete(itemType.FeatureName(), err.Error())
+		gxErr.ErrXtremeSettingItemTypeDelete(err.Error())
 	}
 }
