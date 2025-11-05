@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// <your-service-name-or-feature>
+package inventory;
+option go_package = "internal/pkg/grpc/inventory";
+
+message Response {
+  string message = 1;
+  bytes result = 2;
+}

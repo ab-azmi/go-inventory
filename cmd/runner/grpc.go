@@ -2,14 +2,15 @@ package runner
 
 import (
 	"fmt"
-	xtremegrpc "github.com/globalxtreme/go-core/v2/grpc"
-	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
-	"github.com/spf13/cobra"
-	"google.golang.org/grpc/reflection"
 	"log"
 	"os"
 	"service/internal/app/grpc"
 	"service/internal/pkg/config"
+
+	xtremegrpc "github.com/globalxtreme/go-core/v2/grpc"
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
+	"github.com/spf13/cobra"
+	"google.golang.org/grpc/reflection"
 )
 
 func init() {
@@ -27,7 +28,7 @@ func init() {
 			logCleanup := xtremepkg.InitLogRPC()
 			defer logCleanup()
 
-			addr := fmt.Sprintf("%s", os.Getenv("GRPC_HOST"))
+			addr := fmt.Sprintf("%s", os.Getenv("GRPC_DEV_TEST_HOST"))
 
 			server := xtremegrpc.GRPCServer{}
 			server.NewServer(addr)

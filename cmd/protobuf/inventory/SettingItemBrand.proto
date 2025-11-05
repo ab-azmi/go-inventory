@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package inventory;
+option go_package = "internal/pkg/grpc/inventory";
+
+import "Response.proto";
+
+service SettingItemBrandService {
+    rpc Store(SettingItemBrandRequest) returns (Response){}
+    rpc RollbackStore(RollbackRequest) returns (Response){}
+}
+
+message SettingItemBrandRequest {
+    string name = 1;
+}
+
+message RollbackRequest {
+    bytes data = 1;
+}
+

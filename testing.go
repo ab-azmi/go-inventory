@@ -2,19 +2,30 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"mime/multipart"
+	"os"
+	"service/internal/pkg/config"
+	"service/internal/pkg/constant"
+	"service/internal/pkg/grpc/inventory"
+	"service/internal/pkg/model"
+	"strings"
+	"time"
+
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 	xtremerabbitmq "github.com/globalxtreme/go-core/v2/rabbitmq"
 	"github.com/joho/godotenv"
-	"io"
-	"mime/multipart"
-	"service/internal/pkg/config"
-	"service/internal/pkg/constant"
-	"strings"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 )
 
 type testing struct {
@@ -28,6 +39,7 @@ func main() {
 	}
 
 	//sendRabbitMQ()
+	TestRPC()
 }
 
 func getCase1() interface{} {
@@ -234,4 +246,49 @@ type Location struct {
 type UploadFile struct {
 	File        multipart.File
 	FileHandler *multipart.FileHeader
+}
+
+func TestRPC() func() {
+	addr := fmt.Sprintf("%s", os.Getenv("GRPC_DEV_TEST_HOST"))
+
+	if addr != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+		kacp := keepalive.ClientParameters{
+			Time:                60 * time.Second,
+			Timeout:             20 * time.Second,
+			PermitWithoutStream: true,
+		}
+
+		conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithKeepaliveParams(kacp))
+		if err != nil {
+			log.Panicf("Cannot connect: %s", addr)
+		}
+
+		client := inventory.NewSettingItemBrandServiceClient(conn)
+
+		res, resErr := client.Store(ctx, &inventory.SettingItemBrandRequest{
+			Name: "Djarum",
+		})
+		if resErr != nil {
+			log.Panic(resErr.Error())
+		}
+
+		var brand model.ItemBrand
+		errJson := json.Unmarshal(res.Result, &brand)
+		if errJson != nil {
+			log.Println("failed to marshal response:", errJson.Error())
+		}
+
+		log.Println(brand)
+
+		cleanup := func() {
+			cancel()
+			conn.Close()
+		}
+
+		return cleanup
+	}
+
+	return func() {}
 }

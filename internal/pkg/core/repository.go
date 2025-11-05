@@ -2,12 +2,13 @@ package core
 
 import (
 	"fmt"
-	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 	"net/url"
 	"service/internal/pkg/config"
 	"time"
+
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 type TransactionRepository interface {
@@ -78,4 +79,8 @@ func TakenNumberPool(repo NumberPoolRepository, tx *gorm.DB) (string, func()) {
 	}
 
 	return numberPool, errFunc
+}
+
+func ResetAutoIncrement(tableName string) {
+	config.PgSQL.Exec(fmt.Sprintf("SELECT setval(pg_get_serial_sequence('%s', 'id'), (SELECT MAX(id) FROM %s))", tableName, tableName))
 }

@@ -5,14 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"google.golang.org/grpc"
-	"gorm.io/gorm"
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
 	"service/internal/pkg/form"
 	"service/internal/pkg/grpc/example"
 	"service/internal/testing/repository"
+
+	"google.golang.org/grpc"
+	"gorm.io/gorm"
 )
 
 type TestingServer struct {
