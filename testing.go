@@ -274,7 +274,7 @@ func TestRPC() func() {
 			log.Panic(resErr.Error())
 		}
 
-		var brand model.ItemBrand
+		var brand model.ItemComponentBrand
 		errJson := json.Unmarshal(res.Result, &brand)
 		if errJson != nil {
 			log.Println("failed to marshal response:", errJson.Error())

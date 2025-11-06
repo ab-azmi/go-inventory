@@ -1,6 +1,7 @@
 package handler
 
 import (
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"net/http"
 	"service/internal/pkg/form"
 	"service/internal/pkg/parser"
@@ -20,6 +21,18 @@ func (hlr *ItemBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
 	parser := parser.SettingItemBrandParser{Array: brands}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
+	response.Success(w)
+}
+
+func (hlr *ItemBrandHandler) Detail(w http.ResponseWriter, r *http.Request) {
+	repo := SettingRepo.NewSettingItemBrandRepository()
+	brand := repo.FirstByForm(form.SettingItemBrandFilterForm{
+		ID: uint(xtremepkg.ToInt(mux.Vars(r)["id"])),
+	})
+
+	parser := parser.SettingItemBrandParser{Object: brand}
+
+	response := xtremeres.Response{Object: parser.First()}
 	response.Success(w)
 }
 

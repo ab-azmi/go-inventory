@@ -7,8 +7,7 @@ import (
 	"service/internal/pkg/constant"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
-	"service/internal/pkg/parser"
-	"service/internal/pkg/port"
+	parser2 "service/internal/pkg/parser"
 	"service/internal/setting/repository"
 	"strconv"
 
@@ -17,10 +16,9 @@ import (
 
 type SettingItemBrandService interface {
 	SetTransaction(tx *gorm.DB)
-	SetActivityRepository(repo port.ActivityRepository)
 
-	Create(form form.SettingForm) model.ItemBrand
-	Update(id string, form form.SettingForm) model.ItemBrand
+	Create(form form.SettingForm) model.ItemComponentBrand
+	Update(id string, form form.SettingForm) model.ItemComponentBrand
 	Delete(id string)
 }
 
@@ -31,27 +29,22 @@ func NewSettingItemBrandService() SettingItemBrandService {
 type settingItemBrandService struct {
 	tx *gorm.DB
 
-	repository         repository.SettingItemBrandRepository
-	activityRepository port.ActivityRepository
+	repository repository.SettingItemBrandRepository
 }
 
 func (srv *settingItemBrandService) SetTransaction(tx *gorm.DB) {
 	srv.tx = tx
 }
 
-func (srv *settingItemBrandService) SetActivityRepository(repo port.ActivityRepository) {
-	srv.activityRepository = repo
-}
-
-func (srv *settingItemBrandService) Create(form form.SettingForm) model.ItemBrand {
-	var brand model.ItemBrand
+func (srv *settingItemBrandService) Create(form form.SettingForm) model.ItemComponentBrand {
+	brand := srv.prepare(nil)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemBrandRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		brand = srv.repository.Create(form)
 
-		brandParser := parser.SettingItemBrandParser{Object: brand}
+		brandParser := parser2.SettingItemBrandParser{Object: brand}
 
 		activity.UseActivity{}.SetReference(brand).SetParser(&brandParser).SetNewProperty(constant.ACTION_CREATE).
 			Save(fmt.Sprintf("Create new Brand: %s", brand.Name))
@@ -63,20 +56,18 @@ func (srv *settingItemBrandService) Create(form form.SettingForm) model.ItemBran
 
 }
 
-func (srv *settingItemBrandService) Update(id string, form form.SettingForm) model.ItemBrand {
-	brand := srv.prepare(id)
-
-	parser := parser.SettingItemBrandParser{Object: brand}
+func (srv *settingItemBrandService) Update(id string, form form.SettingForm) model.ItemComponentBrand {
+	brand := srv.prepare(&id)
+	parser := parser2.SettingItemBrandParser{Object: brand}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		updateActivity := activity.UseActivity{}.SetReference(brand).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
+		srv.repository.SetTransaction(tx)
 
-		srv.repository = repository.NewSettingItemBrandRepository(tx)
+		updateActivity := activity.UseActivity{}.SetReference(brand).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
 		brand = srv.repository.Update(brand, form)
 
 		parser.Object = brand
-
 		updateActivity.SetReference(brand).SetParser(&parser).SetNewProperty(constant.ACTION_UPDATE).
 			Save(fmt.Sprintf("Updated brand: %s", brand.Name))
 
@@ -87,16 +78,14 @@ func (srv *settingItemBrandService) Update(id string, form form.SettingForm) mod
 }
 
 func (srv *settingItemBrandService) Delete(id string) {
-	brand := srv.prepare(id)
-
-	parser := parser.SettingItemBrandParser{Object: brand}
+	brand := srv.prepare(&id)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemBrandRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		srv.repository.Delete(brand)
 
-		activity.UseActivity{}.SetReference(brand).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
+		activity.UseActivity{}.SetReference(brand).
 			Save(fmt.Sprintf("Delete brand: %s", brand.Name))
 
 		return nil
@@ -105,11 +94,14 @@ func (srv *settingItemBrandService) Delete(id string) {
 
 /** --- FUNCTIONS --- */
 
-func (srv *settingItemBrandService) prepare(id string) model.ItemBrand {
-	srv.repository = repository.NewSettingItemBrandRepository(config.PgSQL)
+func (srv *settingItemBrandService) prepare(id *string) model.ItemComponentBrand {
+	srv.repository = repository.NewSettingItemBrandRepository()
 
-	uintId, _ := strconv.ParseUint(id, 10, 0)
-	brand := srv.repository.FirstById(uint(uintId))
+	var brand model.ItemComponentBrand
+	if id != nil || *id != "" {
+		uintId, _ := strconv.ParseUint(*id, 10, 0)
+		brand = srv.repository.FirstById(uint(uintId))
+	}
 
 	return brand
 }

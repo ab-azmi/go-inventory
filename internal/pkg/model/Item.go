@@ -1,6 +1,8 @@
 package model
 
-import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+import (
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+)
 
 type Item struct {
 	xtrememodel.BaseModelUUID
@@ -18,10 +20,11 @@ type Item struct {
 	CreatedBy           *string `gorm:"column:createdBy;type:varchar(45);index"`
 	CreatedByName       *string `gorm:"column:createdByName;type:varchar(255)"`
 
-	Type     ItemType     `gorm:"foreignKey:typeId;references:ID"`
-	Category ItemCategory `gorm:"foreignKey:categoryId;references:ID"`
-	Brand    *ItemBrand   `gorm:"foreignKey:brandId;references:ID"`
-	Unit     ItemUnit     `gorm:"foreignKey:unitId;references:ID"`
+	Type           ItemType            `gorm:"foreignKey:typeId;references:ID"`
+	Category       ItemCategory        `gorm:"foreignKey:categoryId;references:ID"`
+	Brand          *ItemComponentBrand `gorm:"foreignKey:brandId;references:ID"`
+	Unit           ItemUnit            `gorm:"foreignKey:unitId;references:ID"`
+	ItemWarehouses []ItemWarehouse     `gorm:"foreignKey:itemId;references:ID"`
 }
 
 func (Item) TableName() string {
@@ -30,4 +33,11 @@ func (Item) TableName() string {
 
 func (md *Item) SetReference() uint {
 	return md.ID
+}
+
+func (md *Item) GetAlias() string {
+	alias := md.Name
+	alias = alias + "_" + md.SKU
+
+	return alias
 }

@@ -29,6 +29,13 @@ func (parser *SettingItemTypeParser) First() interface{} {
 	}
 }
 
+func (parser *SettingItemTypeParser) Simple(object model.ItemType) interface{} {
+	return map[string]interface{}{
+		"id":   object.ID,
+		"name": object.Name,
+	}
+}
+
 func (parser *SettingItemTypeParser) CreateActivity(action string) interface{} {
 	return parser.First()
 }

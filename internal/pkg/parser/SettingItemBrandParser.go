@@ -3,8 +3,8 @@ package parser
 import "service/internal/pkg/model"
 
 type SettingItemBrandParser struct {
-	Array  []model.ItemBrand
-	Object model.ItemBrand
+	Array  []model.ItemComponentBrand
+	Object model.ItemComponentBrand
 }
 
 func (parser *SettingItemBrandParser) Get() []interface{} {

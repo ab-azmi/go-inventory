@@ -1,11 +1,10 @@
 package migration
 
 import (
+	xtremedb "github.com/globalxtreme/go-core/v2/database"
 	"os"
 	"service/internal/pkg/config"
 	"service/internal/pkg/model"
-
-	xtremedb "github.com/globalxtreme/go-core/v2/database"
 )
 
 type Item struct{}
@@ -21,7 +20,7 @@ func (Item) Tables() []xtremedb.Table {
 		{Connection: config.PgSQL, CreateTable: model.ItemUnit{}, Owner: owner},
 		{Connection: config.PgSQL, CreateTable: model.ItemType{}, Owner: owner},
 		{Connection: config.PgSQL, CreateTable: model.ItemCategory{}, Owner: owner},
-		{Connection: config.PgSQL, CreateTable: model.ItemBrand{}, Owner: owner},
+		{Connection: config.PgSQL, CreateTable: model.ItemComponentBrand{}, Owner: owner},
 		{Connection: config.PgSQL, CreateTable: model.Item{}, Owner: owner},
 	}
 }

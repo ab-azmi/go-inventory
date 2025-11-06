@@ -18,7 +18,7 @@ func (seed *ItemSeeder) Seed() {
 
 	brands, brandIds := seed.getBrandData(10)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&brands, batchSize)
-	core.ResetAutoIncrement(model.ItemBrand{}.TableName())
+	core.ResetAutoIncrement(model.ItemComponentBrand{}.TableName())
 
 	types, typeIds := seed.getTypeData(10)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&types, batchSize)
@@ -67,12 +67,12 @@ func (seed *ItemSeeder) getItemData(rows uint, brandIds []uint, typeIds []uint, 
 	return items
 }
 
-func (seed *ItemSeeder) getBrandData(rows uint) ([]model.ItemBrand, []uint) {
-	var brands []model.ItemBrand
+func (seed *ItemSeeder) getBrandData(rows uint) ([]model.ItemComponentBrand, []uint) {
+	var brands []model.ItemComponentBrand
 	var ids []uint
 
 	for i := uint(1); i <= rows; i++ {
-		brands = append(brands, model.ItemBrand{
+		brands = append(brands, model.ItemComponentBrand{
 			Name: gofakeit.LastName(),
 			BaseModel: xtrememodel.BaseModel{
 				ID:        i,

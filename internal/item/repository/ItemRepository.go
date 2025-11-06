@@ -2,13 +2,12 @@ package repository
 
 import (
 	"database/sql"
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+	"gorm.io/gorm"
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
 	"service/internal/pkg/model"
-
-	xtrememodel "github.com/globalxtreme/go-core/v2/model"
-	"gorm.io/gorm"
 )
 
 type ItemRepository interface {

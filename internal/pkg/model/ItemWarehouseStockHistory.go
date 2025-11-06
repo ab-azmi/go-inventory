@@ -1,6 +1,8 @@
 package model
 
-import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+import (
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+)
 
 type ItemWarehouseStockHistory struct {
 	xtrememodel.BaseModel
@@ -11,7 +13,7 @@ type ItemWarehouseStockHistory struct {
 	Description     *string                        `gorm:"column:description;type:text"`
 	SerialNumbers   *xtrememodel.ArrayStringColumn `gorm:"column:serialNumbers;type:json"`
 
-	ItemWarehouse ItemWarehouse `gorm:"foreignKey:itemWarehouseId;references:ID"`
+	ItemWarehouse ItemWarehouse `gorm:"foreignKey:itemWarehouseId"`
 }
 
 func (ItemWarehouseStockHistory) TableName() string {

@@ -1,6 +1,8 @@
 package model
 
-import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+import (
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+)
 
 type ItemWarehouseSerialNumber struct {
 	xtrememodel.BaseModel

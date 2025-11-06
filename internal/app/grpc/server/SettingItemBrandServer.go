@@ -30,7 +30,7 @@ func (srv *SettingItemBrandServer) Register(serverRPC *grpc.Server) {
 
 func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.SettingItemBrandRequest) (*inventory.Response, error) {
 	res, err := core.GRPCErrorHandler(func() (*inventory.Response, error) {
-		var brand model.ItemBrand
+		var brand model.ItemComponentBrand
 
 		err := config.PgSQL.Transaction(func(tx *gorm.DB) error {
 			repo := repository.NewSettingItemBrandRepository(tx)
