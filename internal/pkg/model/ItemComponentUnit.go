@@ -4,7 +4,7 @@ import (
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
 )
 
-type ItemUnit struct {
+type ItemComponentUnit struct {
 	xtrememodel.BaseModel
 	Name          string  `gorm:"column:name;type:varchar(255);not null"`
 	Abbreviation  string  `gorm:"column:abbreviation;type:varchar(100);not null"`
@@ -15,10 +15,10 @@ type ItemUnit struct {
 	CreatedByName *string `gorm:"column:createdByName;type:varchar(255)"`
 }
 
-func (ItemUnit) TableName() string {
+func (ItemComponentUnit) TableName() string {
 	return "item_units"
 }
 
-func (md ItemUnit) SetReference() uint {
+func (md ItemComponentUnit) SetReference() uint {
 	return md.ID
 }

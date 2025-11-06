@@ -2,52 +2,45 @@ package service
 
 import (
 	"fmt"
+	"service/internal/item/repository"
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/constant"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"service/internal/pkg/port"
-	"service/internal/setting/repository"
 	"strconv"
 
 	"gorm.io/gorm"
 )
 
-type SettingItemCategoryService interface {
+type ItemComponentCategoryService interface {
 	SetTransaction(tx *gorm.DB)
-	SetActivityRepository(repo port.ActivityRepository)
 
-	Create(form form.SettingItemCategoryForm) model.ItemCategory
-	Update(id string, form form.SettingItemCategoryForm) model.ItemCategory
+	Create(form form.SettingItemCategoryForm) model.ItemComponentCategory
+	Update(id string, form form.SettingItemCategoryForm) model.ItemComponentCategory
 	Delete(id string)
 }
 
-func NewSettingItemCategoryService() SettingItemCategoryService {
-	return &settingItemCategoryService{}
+func NewItemComponentCategoryService() ItemComponentCategoryService {
+	return &itemComponentCategoryService{}
 }
 
-type settingItemCategoryService struct {
+type itemComponentCategoryService struct {
 	tx *gorm.DB
 
-	repository         repository.SettingItemCategoryRepository
-	activityRepository port.ActivityRepository
+	repository repository.ItemComponentCategoryRepository
 }
 
-func (srv *settingItemCategoryService) SetTransaction(tx *gorm.DB) {
+func (srv *itemComponentCategoryService) SetTransaction(tx *gorm.DB) {
 	srv.tx = tx
 }
 
-func (srv *settingItemCategoryService) SetActivityRepository(repo port.ActivityRepository) {
-	srv.activityRepository = repo
-}
-
-func (srv *settingItemCategoryService) Create(form form.SettingItemCategoryForm) model.ItemCategory {
-	var itemCategory model.ItemCategory
+func (srv *itemComponentCategoryService) Create(form form.SettingItemCategoryForm) model.ItemComponentCategory {
+	var itemCategory model.ItemComponentCategory
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemCategoryRepository(tx)
+		srv.repository = repository.NewItemComponentCategoryRepository(tx)
 
 		itemCategory = srv.repository.Create(form)
 
@@ -63,7 +56,7 @@ func (srv *settingItemCategoryService) Create(form form.SettingItemCategoryForm)
 
 }
 
-func (srv *settingItemCategoryService) Update(id string, form form.SettingItemCategoryForm) model.ItemCategory {
+func (srv *itemComponentCategoryService) Update(id string, form form.SettingItemCategoryForm) model.ItemComponentCategory {
 	itemCategory := srv.prepare(id)
 
 	parser := parser.SettingItemCategoryParser{Object: itemCategory}
@@ -71,7 +64,7 @@ func (srv *settingItemCategoryService) Update(id string, form form.SettingItemCa
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewSettingItemCategoryRepository(tx)
+		srv.repository = repository.NewItemComponentCategoryRepository(tx)
 
 		itemCategory = srv.repository.Update(itemCategory, form)
 
@@ -86,13 +79,13 @@ func (srv *settingItemCategoryService) Update(id string, form form.SettingItemCa
 	return itemCategory
 }
 
-func (srv *settingItemCategoryService) Delete(id string) {
+func (srv *itemComponentCategoryService) Delete(id string) {
 	itemCategory := srv.prepare(id)
 
 	parser := parser.SettingItemCategoryParser{Object: itemCategory}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemCategoryRepository(tx)
+		srv.repository = repository.NewItemComponentCategoryRepository(tx)
 
 		srv.repository.Delete(itemCategory)
 
@@ -105,8 +98,8 @@ func (srv *settingItemCategoryService) Delete(id string) {
 
 /** --- FUNCTIONS --- */
 
-func (srv *settingItemCategoryService) prepare(id string) model.ItemCategory {
-	srv.repository = repository.NewSettingItemCategoryRepository(config.PgSQL)
+func (srv *itemComponentCategoryService) prepare(id string) model.ItemComponentCategory {
+	srv.repository = repository.NewItemComponentCategoryRepository(config.PgSQL)
 
 	uintId, _ := strconv.ParseUint(id, 10, 0)
 	itemCategory := srv.repository.FirstById(uint(uintId))

@@ -18,10 +18,10 @@ func (Item) Tables() []xtremedb.Table {
 	owner := os.Getenv("DB_OWNER")
 
 	return []xtremedb.Table{
-		{Connection: config.PgSQL, CreateTable: model.ItemUnit{}, Owner: owner},
-		{Connection: config.PgSQL, CreateTable: model.ItemType{}, Owner: owner},
-		{Connection: config.PgSQL, CreateTable: model.ItemCategory{}, Owner: owner},
-		{Connection: config.PgSQL, CreateTable: model.ItemBrand{}, Owner: owner},
+		{Connection: config.PgSQL, CreateTable: model.ItemComponentUnit{}, Owner: owner},
+		{Connection: config.PgSQL, CreateTable: model.ItemComponentType{}, Owner: owner},
+		{Connection: config.PgSQL, CreateTable: model.ItemComponentCategory{}, Owner: owner},
+		{Connection: config.PgSQL, CreateTable: model.ItemComponentBrand{}, Owner: owner},
 		{Connection: config.PgSQL, CreateTable: model.Item{}, Owner: owner},
 	}
 }

@@ -3,8 +3,8 @@ package parser
 import "service/internal/pkg/model"
 
 type SettingItemTypeParser struct {
-	Array  []model.ItemType
-	Object model.ItemType
+	Array  []model.ItemComponentType
+	Object model.ItemComponentType
 }
 
 func (parser *SettingItemTypeParser) Get() []interface{} {

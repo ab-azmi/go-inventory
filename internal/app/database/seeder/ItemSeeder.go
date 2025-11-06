@@ -18,19 +18,19 @@ func (seed *ItemSeeder) Seed() {
 
 	brands, brandIds := seed.getBrandData(10)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&brands, batchSize)
-	core.ResetAutoIncrement(model.ItemBrand{}.TableName())
+	core.ResetAutoIncrement(model.ItemComponentBrand{}.TableName())
 
 	types, typeIds := seed.getTypeData(10)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&types, batchSize)
-	core.ResetAutoIncrement(model.ItemType{}.TableName())
+	core.ResetAutoIncrement(model.ItemComponentType{}.TableName())
 
 	units, unitIds := seed.getUnitData(5)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&units, batchSize)
-	core.ResetAutoIncrement(model.ItemUnit{}.TableName())
+	core.ResetAutoIncrement(model.ItemComponentUnit{}.TableName())
 
 	categories, categoryIds := seed.getCategoryData(5)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&categories, batchSize)
-	core.ResetAutoIncrement(model.ItemCategory{}.TableName())
+	core.ResetAutoIncrement(model.ItemComponentCategory{}.TableName())
 
 	items := seed.getItemData(20, brandIds, typeIds, unitIds, categoryIds)
 	config.PgSQL.Clauses(clause.OnConflict{DoNothing: true}).CreateInBatches(&items, batchSize)
@@ -67,12 +67,12 @@ func (seed *ItemSeeder) getItemData(rows uint, brandIds []uint, typeIds []uint, 
 	return items
 }
 
-func (seed *ItemSeeder) getBrandData(rows uint) ([]model.ItemBrand, []uint) {
-	var brands []model.ItemBrand
+func (seed *ItemSeeder) getBrandData(rows uint) ([]model.ItemComponentBrand, []uint) {
+	var brands []model.ItemComponentBrand
 	var ids []uint
 
 	for i := uint(1); i <= rows; i++ {
-		brands = append(brands, model.ItemBrand{
+		brands = append(brands, model.ItemComponentBrand{
 			Name: gofakeit.LastName(),
 			BaseModel: xtrememodel.BaseModel{
 				ID:        i,
@@ -88,12 +88,12 @@ func (seed *ItemSeeder) getBrandData(rows uint) ([]model.ItemBrand, []uint) {
 	return brands, ids
 }
 
-func (seed *ItemSeeder) getTypeData(rows uint) ([]model.ItemType, []uint) {
-	var types []model.ItemType
+func (seed *ItemSeeder) getTypeData(rows uint) ([]model.ItemComponentType, []uint) {
+	var types []model.ItemComponentType
 	var ids []uint
 
 	for i := uint(1); i <= rows; i++ {
-		types = append(types, model.ItemType{
+		types = append(types, model.ItemComponentType{
 			Name: gofakeit.LastName(),
 			BaseModel: xtrememodel.BaseModel{
 				ID:        i,
@@ -109,13 +109,13 @@ func (seed *ItemSeeder) getTypeData(rows uint) ([]model.ItemType, []uint) {
 	return types, ids
 }
 
-func (seed *ItemSeeder) getUnitData(rows uint) ([]model.ItemUnit, []uint) {
-	var units []model.ItemUnit
+func (seed *ItemSeeder) getUnitData(rows uint) ([]model.ItemComponentUnit, []uint) {
+	var units []model.ItemComponentUnit
 	symbols := []string{"kg", "g", "mg", "l", "ml", "m", "cm", "mm", "pcs"}
 	var ids []uint
 
 	for i := uint(1); i <= rows; i++ {
-		units = append(units, model.ItemUnit{
+		units = append(units, model.ItemComponentUnit{
 			Name:          gofakeit.RandomString(symbols),
 			Abbreviation:  gofakeit.RandomString(symbols),
 			Type:          gofakeit.FirstName(),
@@ -136,12 +136,12 @@ func (seed *ItemSeeder) getUnitData(rows uint) ([]model.ItemUnit, []uint) {
 	return units, ids
 }
 
-func (seed *ItemSeeder) getCategoryData(rows uint) ([]model.ItemCategory, []uint) {
-	var categories []model.ItemCategory
+func (seed *ItemSeeder) getCategoryData(rows uint) ([]model.ItemComponentCategory, []uint) {
+	var categories []model.ItemComponentCategory
 	var ids []uint
 
 	for i := uint(1); i <= rows; i++ {
-		categories = append(categories, model.ItemCategory{
+		categories = append(categories, model.ItemComponentCategory{
 			Name:      gofakeit.LastName(),
 			IsForSale: gofakeit.Bool(),
 			BaseModel: xtrememodel.BaseModel{

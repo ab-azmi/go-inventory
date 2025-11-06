@@ -12,18 +12,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type SettingItemUnitRepository interface {
+type ItemComponentUnitRepository interface {
 	core.TransactionRepository
 
-	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemUnit, interface{}, error)
-	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemUnit
-	Create(form form.SettingItemUnitForm) model.ItemUnit
-	Update(itemUnit model.ItemUnit, form form.SettingItemUnitForm) model.ItemUnit
-	Delete(itemUnit model.ItemUnit)
+	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentUnit, interface{}, error)
+	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentUnit
+	Create(form form.SettingItemUnitForm) model.ItemComponentUnit
+	Update(itemUnit model.ItemComponentUnit, form form.SettingItemUnitForm) model.ItemComponentUnit
+	Delete(itemUnit model.ItemComponentUnit)
 }
 
-func NewSettingItemUnitRepository(args ...*gorm.DB) SettingItemUnitRepository {
-	repository := settingItemUnitRepository{}
+func NewItemComponentUnitRepository(args ...*gorm.DB) ItemComponentUnitRepository {
+	repository := itemComponentUnitRepository{}
 
 	if len(args) > 0 {
 		repository.transaction = args[0]
@@ -32,16 +32,16 @@ func NewSettingItemUnitRepository(args ...*gorm.DB) SettingItemUnitRepository {
 	return &repository
 }
 
-type settingItemUnitRepository struct {
+type itemComponentUnitRepository struct {
 	transaction *gorm.DB
 }
 
-func (repo *settingItemUnitRepository) SetTransaction(tx *gorm.DB) {
+func (repo *itemComponentUnitRepository) SetTransaction(tx *gorm.DB) {
 	repo.transaction = tx
 }
 
-func (repo *settingItemUnitRepository) Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemUnit, interface{}, error) {
-	var units []model.ItemUnit
+func (repo *itemComponentUnitRepository) Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentUnit, interface{}, error) {
+	var units []model.ItemComponentUnit
 
 	fromDate, toDate := core.SetDateRange(parameter)
 	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
@@ -52,7 +52,7 @@ func (repo *settingItemUnitRepository) Find(parameter url.Values, args ...func(q
 
 	query = query.Order("id DESC")
 
-	units, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemUnit{})
+	units, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentUnit{})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -60,8 +60,8 @@ func (repo *settingItemUnitRepository) Find(parameter url.Values, args ...func(q
 	return units, pagination, nil
 }
 
-func (repo *settingItemUnitRepository) FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemUnit {
-	var itemUnit model.ItemUnit
+func (repo *itemComponentUnitRepository) FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentUnit {
+	var itemUnit model.ItemComponentUnit
 
 	query := config.PgSQL
 	if len(args) > 0 {
@@ -76,8 +76,8 @@ func (repo *settingItemUnitRepository) FirstById(id uint, args ...func(query *go
 	return itemUnit
 }
 
-func (repo *settingItemUnitRepository) Create(form form.SettingItemUnitForm) model.ItemUnit {
-	itemUnit := model.ItemUnit{
+func (repo *itemComponentUnitRepository) Create(form form.SettingItemUnitForm) model.ItemComponentUnit {
+	itemUnit := model.ItemComponentUnit{
 		Name:         form.Name,
 		Abbreviation: form.Abbreviation,
 		Type:         form.Type,
@@ -93,7 +93,7 @@ func (repo *settingItemUnitRepository) Create(form form.SettingItemUnitForm) mod
 	return itemUnit
 }
 
-func (repo *settingItemUnitRepository) Update(itemUnit model.ItemUnit, form form.SettingItemUnitForm) model.ItemUnit {
+func (repo *itemComponentUnitRepository) Update(itemUnit model.ItemComponentUnit, form form.SettingItemUnitForm) model.ItemComponentUnit {
 	itemUnit.Name = form.Name
 	itemUnit.Abbreviation = form.Abbreviation
 	itemUnit.Type = form.Type
@@ -108,7 +108,7 @@ func (repo *settingItemUnitRepository) Update(itemUnit model.ItemUnit, form form
 	return itemUnit
 }
 
-func (repo *settingItemUnitRepository) Delete(itemUnit model.ItemUnit) {
+func (repo *itemComponentUnitRepository) Delete(itemUnit model.ItemComponentUnit) {
 	err := repo.transaction.Delete(&itemUnit).Error
 	if err != nil {
 		gxErr.ErrXtremeSettingItemUnitDelete(err.Error())

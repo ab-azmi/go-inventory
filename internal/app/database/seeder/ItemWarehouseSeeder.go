@@ -3,7 +3,7 @@ package seeder
 import (
 	"log"
 	"service/internal/pkg/config"
-	ItemConstant "service/internal/pkg/constant/Item"
+	"service/internal/pkg/constant"
 	"service/internal/pkg/core"
 	"service/internal/pkg/model"
 	"time"
@@ -106,7 +106,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseData(itemIds []uint, warehouseI
 				},
 				WarehouseId:  j,
 				ItemId:       i,
-				OrderType:    gofakeit.RandomString(ItemConstant.OrderType.OPTION()),
+				OrderType:    gofakeit.RandomString(constant.OrderType.OPTION()),
 				SellingPrice: gofakeit.Product().Price,
 				IsIncludeTax: gofakeit.Bool(),
 				Location:     core.StrPtr(gofakeit.AdverbPlace()),
@@ -154,7 +154,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseStockData(itemWarehouseIds []ui
 		for _, num := range *numbers {
 			mapNumbers[num.ItemWarehouseId] = append(mapNumbers[num.ItemWarehouseId], num.Number)
 
-			if num.Status == ItemConstant.SerialNumberType.IN {
+			if num.Status == constant.SerialNumberType.IN {
 				mapQty[num.ItemWarehouseId] += 1
 			}
 		}
@@ -207,7 +207,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseSerialNumberData(rows uint, ite
 	var histories []model.ItemWarehouseSerialNumberHistory
 
 	for i := uint(1); i < rows; i++ {
-		snType := gofakeit.RandomString(ItemConstant.SerialNumberType.OPTION())
+		snType := gofakeit.RandomString(constant.SerialNumberType.OPTION())
 
 		numbers = append(numbers, model.ItemWarehouseSerialNumber{
 			BaseModel: xtrememodel.BaseModel{

@@ -18,10 +18,10 @@ type Item struct {
 	CreatedBy           *string `gorm:"column:createdBy;type:varchar(45);index"`
 	CreatedByName       *string `gorm:"column:createdByName;type:varchar(255)"`
 
-	Type     ItemType     `gorm:"foreignKey:typeId;references:ID"`
-	Category ItemCategory `gorm:"foreignKey:categoryId;references:ID"`
-	Brand    *ItemBrand   `gorm:"foreignKey:brandId;references:ID"`
-	Unit     ItemUnit     `gorm:"foreignKey:unitId;references:ID"`
+	Type     ItemComponentType     `gorm:"foreignKey:typeId;references:ID"`
+	Category ItemComponentCategory `gorm:"foreignKey:categoryId;references:ID"`
+	Brand    *ItemComponentBrand   `gorm:"foreignKey:brandId;references:ID"`
+	Unit     ItemComponentUnit     `gorm:"foreignKey:unitId;references:ID"`
 }
 
 func (Item) TableName() string {

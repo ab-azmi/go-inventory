@@ -2,52 +2,45 @@ package service
 
 import (
 	"fmt"
+	"service/internal/item/repository"
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/constant"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"service/internal/pkg/port"
-	"service/internal/setting/repository"
 	"strconv"
 
 	"gorm.io/gorm"
 )
 
-type SettingItemTypeService interface {
+type ItemComponentTypeService interface {
 	SetTransaction(tx *gorm.DB)
-	SetActivityRepository(repo port.ActivityRepository)
 
-	Create(form form.SettingForm) model.ItemType
-	Update(id string, form form.SettingForm) model.ItemType
+	Create(form form.SettingForm) model.ItemComponentType
+	Update(id string, form form.SettingForm) model.ItemComponentType
 	Delete(id string)
 }
 
-func NewSettingItemTypeService() SettingItemTypeService {
-	return &settingItemTypeService{}
+func NewItemComponentTypeService() ItemComponentTypeService {
+	return &itemComponentTypeService{}
 }
 
-type settingItemTypeService struct {
+type itemComponentTypeService struct {
 	tx *gorm.DB
 
-	repository         repository.SettingItemTypeRepository
-	activityRepository port.ActivityRepository
+	repository repository.ItemComponentTypeRepository
 }
 
-func (srv *settingItemTypeService) SetTransaction(tx *gorm.DB) {
+func (srv *itemComponentTypeService) SetTransaction(tx *gorm.DB) {
 	srv.tx = tx
 }
 
-func (srv *settingItemTypeService) SetActivityRepository(repo port.ActivityRepository) {
-	srv.activityRepository = repo
-}
-
-func (srv *settingItemTypeService) Create(form form.SettingForm) model.ItemType {
-	var itemType model.ItemType
+func (srv *itemComponentTypeService) Create(form form.SettingForm) model.ItemComponentType {
+	var itemType model.ItemComponentType
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemTypeRepository(tx)
+		srv.repository = repository.NewItemComponentTypeRepository(tx)
 
 		itemType = srv.repository.Create(form)
 
@@ -63,7 +56,7 @@ func (srv *settingItemTypeService) Create(form form.SettingForm) model.ItemType 
 
 }
 
-func (srv *settingItemTypeService) Update(id string, form form.SettingForm) model.ItemType {
+func (srv *itemComponentTypeService) Update(id string, form form.SettingForm) model.ItemComponentType {
 	itemType := srv.prepare(id)
 
 	parser := parser.SettingItemTypeParser{Object: itemType}
@@ -71,7 +64,7 @@ func (srv *settingItemTypeService) Update(id string, form form.SettingForm) mode
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemType).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewSettingItemTypeRepository(tx)
+		srv.repository = repository.NewItemComponentTypeRepository(tx)
 
 		itemType = srv.repository.Update(itemType, form)
 
@@ -86,13 +79,13 @@ func (srv *settingItemTypeService) Update(id string, form form.SettingForm) mode
 	return itemType
 }
 
-func (srv *settingItemTypeService) Delete(id string) {
+func (srv *itemComponentTypeService) Delete(id string) {
 	itemType := srv.prepare(id)
 
 	parser := parser.SettingItemTypeParser{Object: itemType}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewSettingItemTypeRepository(tx)
+		srv.repository = repository.NewItemComponentTypeRepository(tx)
 
 		srv.repository.Delete(itemType)
 
@@ -105,8 +98,8 @@ func (srv *settingItemTypeService) Delete(id string) {
 
 /** --- FUNCTIONS --- */
 
-func (srv *settingItemTypeService) prepare(id string) model.ItemType {
-	srv.repository = repository.NewSettingItemTypeRepository(config.PgSQL)
+func (srv *itemComponentTypeService) prepare(id string) model.ItemComponentType {
+	srv.repository = repository.NewItemComponentTypeRepository(config.PgSQL)
 
 	uintId, _ := strconv.ParseUint(id, 10, 0)
 	itemType := srv.repository.FirstById(uint(uintId))

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"service/internal/item/repository"
 	"service/internal/pkg/activity"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
@@ -12,7 +13,6 @@ import (
 	"service/internal/pkg/grpc/inventory"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"service/internal/setting/repository"
 
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
@@ -30,10 +30,10 @@ func (srv *SettingItemBrandServer) Register(serverRPC *grpc.Server) {
 
 func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.SettingItemBrandRequest) (*inventory.Response, error) {
 	res, err := core.GRPCErrorHandler(func() (*inventory.Response, error) {
-		var brand model.ItemBrand
+		var brand model.ItemComponentBrand
 
 		err := config.PgSQL.Transaction(func(tx *gorm.DB) error {
-			repo := repository.NewSettingItemBrandRepository(tx)
+			repo := repository.NewItemComponentBrandRepository(tx)
 
 			brand = repo.Create(form.SettingForm{Name: in.GetName()})
 
@@ -68,7 +68,7 @@ func (srv *SettingItemBrandServer) RollbackStore(ctx context.Context, in *invent
 		}
 
 		err = config.PgSQL.Transaction(func(tx *gorm.DB) error {
-			repo := repository.NewSettingItemBrandRepository(tx)
+			repo := repository.NewItemComponentBrandRepository(tx)
 
 			idInt, _ := srv.rollbackData["id"].(int)
 			id := uint(idInt)

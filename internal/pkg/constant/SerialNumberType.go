@@ -1,4 +1,4 @@
-package item
+package constant
 
 type SerialNumberTypeStruct struct {
 	IN      string
