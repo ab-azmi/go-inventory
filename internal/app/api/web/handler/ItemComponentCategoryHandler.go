@@ -17,7 +17,7 @@ func (hlr *ItemComponentCategoryHandler) Get(w http.ResponseWriter, r *http.Requ
 	repo := SettingRepo.NewItemComponentCategoryRepository()
 	categories, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := parser2.SettingItemCategoryParser{Array: categories}
+	parser := parser2.ItemComponentCategoryParser{Array: categories}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
@@ -32,7 +32,7 @@ func (hlr *ItemComponentCategoryHandler) Create(w http.ResponseWriter, r *http.R
 
 	category := srv.Create(form)
 
-	parser := parser2.SettingItemCategoryParser{Object: category}
+	parser := parser2.ItemComponentCategoryParser{Object: category}
 	res := xtremeres.Response{Object: parser.First()}
 	res.Success(w)
 }
@@ -46,7 +46,7 @@ func (hlr *ItemComponentCategoryHandler) Update(w http.ResponseWriter, r *http.R
 
 	category := srv.Update(mux.Vars(r)["id"], form)
 
-	parser := parser2.SettingItemCategoryParser{Object: category}
+	parser := parser2.ItemComponentCategoryParser{Object: category}
 	res := xtremeres.Response{Object: parser.First()}
 	res.Success(w)
 }

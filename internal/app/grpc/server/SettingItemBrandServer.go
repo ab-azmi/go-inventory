@@ -37,7 +37,7 @@ func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.Sett
 
 			brand = repo.Create(form.SettingForm{Name: in.GetName()})
 
-			parser := parser.SettingItemBrandParser{Object: brand}
+			parser := parser.ItemComponentBrandParser{Object: brand}
 
 			activity.UseActivity{}.SetReference(brand).SetParser(&parser).
 				Save(fmt.Sprintf("gRPC: Create new brand: %s", brand.Name))

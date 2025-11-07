@@ -70,7 +70,7 @@ func (repo *itemComponentCategoryRepository) FirstById(id uint, args ...func(que
 
 	err := query.First(&itemCategory, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemCategoryGet(err.Error())
+		gxErr.ErrXtremeItemComponentCategoryGet(err.Error())
 	}
 
 	return itemCategory
@@ -84,7 +84,7 @@ func (repo *itemComponentCategoryRepository) Create(form form.SettingItemCategor
 
 	err := repo.transaction.Create(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemCategoryCreate(err.Error())
+		gxErr.ErrXtremeItemComponentCategoryCreate(err.Error())
 	}
 
 	return itemCategory
@@ -96,7 +96,7 @@ func (repo *itemComponentCategoryRepository) Update(itemCategory model.ItemCompo
 
 	err := repo.transaction.Save(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemCategoryUpdate(err.Error())
+		gxErr.ErrXtremeItemComponentCategoryUpdate(err.Error())
 	}
 
 	return itemCategory
@@ -105,6 +105,6 @@ func (repo *itemComponentCategoryRepository) Update(itemCategory model.ItemCompo
 func (repo *itemComponentCategoryRepository) Delete(itemCategory model.ItemComponentCategory) {
 	err := repo.transaction.Delete(&itemCategory).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemCategoryDelete(err.Error())
+		gxErr.ErrXtremeItemComponentCategoryDelete(err.Error())
 	}
 }

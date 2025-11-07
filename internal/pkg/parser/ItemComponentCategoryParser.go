@@ -2,12 +2,12 @@ package parser
 
 import "service/internal/pkg/model"
 
-type SettingItemCategoryParser struct {
+type ItemComponentCategoryParser struct {
 	Array  []model.ItemComponentCategory
 	Object model.ItemComponentCategory
 }
 
-func (parser *SettingItemCategoryParser) Get() []interface{} {
+func (parser *ItemComponentCategoryParser) Get() []interface{} {
 	var categories []interface{}
 
 	for _, brand := range parser.Array {
@@ -18,7 +18,7 @@ func (parser *SettingItemCategoryParser) Get() []interface{} {
 	return categories
 }
 
-func (parser *SettingItemCategoryParser) First() interface{} {
+func (parser *ItemComponentCategoryParser) First() interface{} {
 	object := parser.Object
 
 	return map[string]interface{}{
@@ -30,18 +30,24 @@ func (parser *SettingItemCategoryParser) First() interface{} {
 	}
 }
 
-func (parser *SettingItemCategoryParser) CreateActivity(action string) interface{} {
-	return parser.First()
+func (parser *ItemComponentCategoryParser) CreateActivity(action string) interface{} {
+	object := parser.Object
+
+	return map[string]interface{}{
+		"id":        object.ID,
+		"name":      object.Name,
+		"isForSale": object.IsForSale,
+	}
 }
 
-func (parser *SettingItemCategoryParser) UpdateActivity(action string) interface{} {
+func (parser *ItemComponentCategoryParser) UpdateActivity(action string) interface{} {
 	return parser.CreateActivity(action)
 }
 
-func (parser *SettingItemCategoryParser) DeleteActivity(action string) interface{} {
+func (parser *ItemComponentCategoryParser) DeleteActivity(action string) interface{} {
 	return parser.CreateActivity(action)
 }
 
-func (parser *SettingItemCategoryParser) GeneralActivity(action string) interface{} {
+func (parser *ItemComponentCategoryParser) GeneralActivity(action string) interface{} {
 	return parser.CreateActivity(action)
 }

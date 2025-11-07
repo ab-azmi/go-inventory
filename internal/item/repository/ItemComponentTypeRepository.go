@@ -70,7 +70,7 @@ func (repo *itemComponentTypeRepository) FirstById(id uint, args ...func(query *
 
 	err := query.First(&itemType, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemTypeGet(err.Error())
+		gxErr.ErrXtremeItemComponentTypeGet(err.Error())
 	}
 
 	return itemType
@@ -83,7 +83,7 @@ func (repo *itemComponentTypeRepository) Create(form form.SettingForm) model.Ite
 
 	err := repo.transaction.Create(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemTypeCreate(err.Error())
+		gxErr.ErrXtremeItemComponentTypeCreate(err.Error())
 	}
 
 	return itemType
@@ -94,7 +94,7 @@ func (repo *itemComponentTypeRepository) Update(itemType model.ItemComponentType
 
 	err := repo.transaction.Save(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemTypeUpdate(err.Error())
+		gxErr.ErrXtremeItemComponentTypeUpdate(err.Error())
 	}
 
 	return itemType
@@ -103,6 +103,6 @@ func (repo *itemComponentTypeRepository) Update(itemType model.ItemComponentType
 func (repo *itemComponentTypeRepository) Delete(itemType model.ItemComponentType) {
 	err := repo.transaction.Delete(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemTypeDelete(err.Error())
+		gxErr.ErrXtremeItemComponentTypeDelete(err.Error())
 	}
 }

@@ -44,7 +44,7 @@ func (srv *itemComponentBrandService) Create(form form.SettingForm) model.ItemCo
 
 		brand = srv.repository.Create(form)
 
-		brandParser := parser.SettingItemBrandParser{Object: brand}
+		brandParser := parser.ItemComponentBrandParser{Object: brand}
 
 		activity.UseActivity{}.SetReference(brand).SetParser(&brandParser).SetNewProperty(constant.ACTION_CREATE).
 			Save(fmt.Sprintf("Create new Brand: %s", brand.Name))
@@ -59,7 +59,7 @@ func (srv *itemComponentBrandService) Create(form form.SettingForm) model.ItemCo
 func (srv *itemComponentBrandService) Update(id string, form form.SettingForm) model.ItemComponentBrand {
 	brand := srv.prepare(id)
 
-	brandParser := parser.SettingItemBrandParser{Object: brand}
+	brandParser := parser.ItemComponentBrandParser{Object: brand}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(brand).SetParser(&brandParser).SetOldProperty(constant.ACTION_UPDATE)
@@ -82,7 +82,7 @@ func (srv *itemComponentBrandService) Update(id string, form form.SettingForm) m
 func (srv *itemComponentBrandService) Delete(id string) {
 	brand := srv.prepare(id)
 
-	parser := parser.SettingItemBrandParser{Object: brand}
+	parser := parser.ItemComponentBrandParser{Object: brand}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewItemComponentBrandRepository(tx)

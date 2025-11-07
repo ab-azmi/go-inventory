@@ -70,7 +70,7 @@ func (repo *itemComponentBrandRepository) FirstById(id uint, args ...func(query 
 
 	err := query.First(&brand, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemBrandGet(err.Error())
+		gxErr.ErrXtremeItemComponentBrandGet(err.Error())
 	}
 
 	return brand
@@ -83,7 +83,7 @@ func (repo *itemComponentBrandRepository) Create(form form.SettingForm) model.It
 
 	err := repo.transaction.Create(&brand).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemBrandCreate(err.Error())
+		gxErr.ErrXtremeItemComponentBrandCreate(err.Error())
 	}
 
 	return brand
@@ -94,7 +94,7 @@ func (repo *itemComponentBrandRepository) Update(brand model.ItemComponentBrand,
 
 	err := repo.transaction.Save(&brand).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemBrandUpdate(err.Error())
+		gxErr.ErrXtremeItemComponentBrandUpdate(err.Error())
 	}
 
 	return brand
@@ -103,6 +103,6 @@ func (repo *itemComponentBrandRepository) Update(brand model.ItemComponentBrand,
 func (repo *itemComponentBrandRepository) Delete(brand model.ItemComponentBrand) {
 	err := repo.transaction.Delete(&brand).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemBrandDelete(err.Error())
+		gxErr.ErrXtremeItemComponentBrandDelete(err.Error())
 	}
 }

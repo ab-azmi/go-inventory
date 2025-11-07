@@ -44,7 +44,7 @@ func (srv *itemComponentCategoryService) Create(form form.SettingItemCategoryFor
 
 		itemCategory = srv.repository.Create(form)
 
-		itemCategoryParser := parser.SettingItemCategoryParser{Object: itemCategory}
+		itemCategoryParser := parser.ItemComponentCategoryParser{Object: itemCategory}
 
 		activity.UseActivity{}.SetReference(itemCategory).SetParser(&itemCategoryParser).SetNewProperty(constant.ACTION_CREATE).
 			Save(fmt.Sprintf("Create new Category: %s", itemCategory.Name))
@@ -59,7 +59,7 @@ func (srv *itemComponentCategoryService) Create(form form.SettingItemCategoryFor
 func (srv *itemComponentCategoryService) Update(id string, form form.SettingItemCategoryForm) model.ItemComponentCategory {
 	itemCategory := srv.prepare(id)
 
-	parser := parser.SettingItemCategoryParser{Object: itemCategory}
+	parser := parser.ItemComponentCategoryParser{Object: itemCategory}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
@@ -82,7 +82,7 @@ func (srv *itemComponentCategoryService) Update(id string, form form.SettingItem
 func (srv *itemComponentCategoryService) Delete(id string) {
 	itemCategory := srv.prepare(id)
 
-	parser := parser.SettingItemCategoryParser{Object: itemCategory}
+	parser := parser.ItemComponentCategoryParser{Object: itemCategory}
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewItemComponentCategoryRepository(tx)

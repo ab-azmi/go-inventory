@@ -70,7 +70,7 @@ func (repo *itemComponentUnitRepository) FirstById(id uint, args ...func(query *
 
 	err := query.First(&itemUnit, "id = ?", id).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemUnitGet(err.Error())
+		gxErr.ErrXtremeItemComponentUnitGet(err.Error())
 	}
 
 	return itemUnit
@@ -87,7 +87,7 @@ func (repo *itemComponentUnitRepository) Create(form form.SettingItemUnitForm) m
 
 	err := repo.transaction.Create(&itemUnit).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemUnitCreate(err.Error())
+		gxErr.ErrXtremeItemComponentUnitCreate(err.Error())
 	}
 
 	return itemUnit
@@ -102,7 +102,7 @@ func (repo *itemComponentUnitRepository) Update(itemUnit model.ItemComponentUnit
 
 	err := repo.transaction.Save(&itemUnit).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemUnitUpdate(err.Error())
+		gxErr.ErrXtremeItemComponentUnitUpdate(err.Error())
 	}
 
 	return itemUnit
@@ -111,6 +111,6 @@ func (repo *itemComponentUnitRepository) Update(itemUnit model.ItemComponentUnit
 func (repo *itemComponentUnitRepository) Delete(itemUnit model.ItemComponentUnit) {
 	err := repo.transaction.Delete(&itemUnit).Error
 	if err != nil {
-		gxErr.ErrXtremeSettingItemUnitDelete(err.Error())
+		gxErr.ErrXtremeItemComponentUnitDelete(err.Error())
 	}
 }

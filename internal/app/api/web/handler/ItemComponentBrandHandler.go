@@ -17,7 +17,7 @@ func (hlr *ItemComponentBrandHandler) Get(w http.ResponseWriter, r *http.Request
 	repo := SettingRepo.NewItemComponentBrandRepository()
 	brands, pagination, _ := repo.Find(r.URL.Query())
 
-	parser := parser2.SettingItemBrandParser{Array: brands}
+	parser := parser2.ItemComponentBrandParser{Array: brands}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
 	response.Success(w)
@@ -32,7 +32,7 @@ func (hlr *ItemComponentBrandHandler) Create(w http.ResponseWriter, r *http.Requ
 
 	brand := srv.Create(form)
 
-	parser := parser2.SettingItemBrandParser{Object: brand}
+	parser := parser2.ItemComponentBrandParser{Object: brand}
 	res := xtremeres.Response{Object: parser.First()}
 	res.Success(w)
 }
@@ -46,7 +46,7 @@ func (hlr *ItemComponentBrandHandler) Update(w http.ResponseWriter, r *http.Requ
 
 	brand := srv.Update(mux.Vars(r)["id"], form)
 
-	parser := parser2.SettingItemBrandParser{Object: brand}
+	parser := parser2.ItemComponentBrandParser{Object: brand}
 	res := xtremeres.Response{Object: parser.First()}
 	res.Success(w)
 }

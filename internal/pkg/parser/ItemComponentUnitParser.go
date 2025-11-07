@@ -34,7 +34,16 @@ func (parser *SettingItemUnitParser) First() interface{} {
 }
 
 func (parser *SettingItemUnitParser) CreateActivity(action string) interface{} {
-	return parser.First()
+	object := parser.Object
+
+	return map[string]interface{}{
+		"id":           object.ID,
+		"name":         object.Name,
+		"abbreviation": object.Abbreviation,
+		"type":         object.Type,
+		"isBaseUnit":   object.IsBaseUnit,
+		"conversion":   object.Conversion,
+	}
 }
 
 func (parser *SettingItemUnitParser) UpdateActivity(action string) interface{} {
