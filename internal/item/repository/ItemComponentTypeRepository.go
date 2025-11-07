@@ -44,14 +44,9 @@ func (repo *itemComponentTypeRepository) SetTransaction(tx *gorm.DB) {
 func (repo *itemComponentTypeRepository) Paginate(parameter url.Values) ([]model.ItemComponentType, interface{}, error) {
 	var types []model.ItemComponentType
 
-	fromDate, toDate := core.SetDateRange(parameter)
-	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
-
-	query = repo.prepare(form.IdNameFilterForm{
+	query := repo.prepare(form.IdNameFilterForm{
 		Search: parameter.Get("search"),
-	})
-
-	query = query.Order("id DESC")
+	}).Order("id DESC")
 
 	types, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentType{})
 	if err != nil {

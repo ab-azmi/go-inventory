@@ -40,7 +40,7 @@ func (srv *itemComponentBrandService) Create(form form.SettingForm) model.ItemCo
 	brand := srv.prepare(nil)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentBrandRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		brand = srv.repository.Create(form)
 
@@ -63,7 +63,7 @@ func (srv *itemComponentBrandService) Update(id string, form form.SettingForm) m
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(brand).SetParser(&brandParser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewItemComponentBrandRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		brand = srv.repository.Update(brand, form)
 

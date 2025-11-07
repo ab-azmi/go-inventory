@@ -40,7 +40,7 @@ func (srv *itemComponentCategoryService) Create(form form.ItemComponentCategoryF
 	var itemCategory model.ItemComponentCategory
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentCategoryRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemCategory = srv.repository.Create(form)
 
@@ -64,7 +64,7 @@ func (srv *itemComponentCategoryService) Update(id string, form form.ItemCompone
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewItemComponentCategoryRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemCategory = srv.repository.Update(itemCategory, form)
 
@@ -83,7 +83,7 @@ func (srv *itemComponentCategoryService) Delete(id string) {
 	itemCategory := srv.prepare(id)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentCategoryRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		srv.repository.Delete(itemCategory)
 

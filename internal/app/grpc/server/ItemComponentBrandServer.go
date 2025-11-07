@@ -14,17 +14,17 @@ import (
 	"google.golang.org/grpc"
 )
 
-type SettingItemBrandServer struct {
-	inventory.UnimplementedSettingItemBrandServiceServer
+type ItemComponentBrandServer struct {
+	inventory.UnimplementedItemComponentBrandServiceServer
 
 	rollbackData map[string]interface{}
 }
 
-func (srv *SettingItemBrandServer) Register(serverRPC *grpc.Server) {
-	inventory.RegisterSettingItemBrandServiceServer(serverRPC, srv)
+func (srv *ItemComponentBrandServer) Register(serverRPC *grpc.Server) {
+	inventory.RegisterItemComponentBrandServiceServer(serverRPC, srv)
 }
 
-func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.SettingItemBrandRequest) (*inventory.Response, error) {
+func (srv *ItemComponentBrandServer) Store(ctx context.Context, in *inventory.ItemComponentBrandRequest) (*inventory.Response, error) {
 	res, err := core.GRPCErrorHandler(func() (*inventory.Response, error) {
 		var brand model.ItemComponentBrand
 
@@ -40,7 +40,7 @@ func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.Sett
 	return res, err
 }
 
-func (srv *SettingItemBrandServer) RollbackStore(ctx context.Context, in *inventory.RollbackRequest) (*inventory.Response, error) {
+func (srv *ItemComponentBrandServer) RollbackStore(ctx context.Context, in *inventory.RollbackRequest) (*inventory.Response, error) {
 	res, err := core.GRPCErrorHandler(func() (*inventory.Response, error) {
 		err := json.Unmarshal(in.GetData(), &srv.rollbackData)
 		if err != nil {
@@ -60,7 +60,7 @@ func (srv *SettingItemBrandServer) RollbackStore(ctx context.Context, in *invent
 
 /** --- UNEXPORTED FUNCTIONS --- */
 
-func (srv *SettingItemBrandServer) success(result ...any) (*inventory.Response, error) {
+func (srv *ItemComponentBrandServer) success(result ...any) (*inventory.Response, error) {
 	var data []byte
 	if len(result) > 0 {
 		data, _ = json.Marshal(result[0])

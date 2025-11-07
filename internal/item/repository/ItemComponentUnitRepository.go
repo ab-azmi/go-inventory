@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
@@ -14,9 +15,10 @@ import (
 
 type ItemComponentUnitRepository interface {
 	core.TransactionRepository
+	core.PaginateRepository[model.ItemComponentUnit]
+	core.FirstByFormRepository[model.ItemComponentUnit, form.ItemComponentUnitFilterForm]
+	core.FindByFormRepository[model.ItemComponentUnit, form.ItemComponentUnitFilterForm]
 
-	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentUnit, interface{}, error)
-	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentUnit
 	Create(form form.ItemComponentUnitForm) model.ItemComponentUnit
 	Update(itemUnit model.ItemComponentUnit, form form.ItemComponentUnitForm) model.ItemComponentUnit
 	Delete(itemUnit model.ItemComponentUnit)
@@ -40,17 +42,12 @@ func (repo *itemComponentUnitRepository) SetTransaction(tx *gorm.DB) {
 	repo.transaction = tx
 }
 
-func (repo *itemComponentUnitRepository) Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentUnit, interface{}, error) {
+func (repo *itemComponentUnitRepository) Paginate(parameter url.Values) ([]model.ItemComponentUnit, interface{}, error) {
 	var units []model.ItemComponentUnit
 
-	fromDate, toDate := core.SetDateRange(parameter)
-	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
-
-	if search := parameter.Get("search"); len(search) > 3 {
-		query = query.Where("name LIKE ?", "%"+search+"%")
-	}
-
-	query = query.Order("id DESC")
+	query := repo.prepare(form.ItemComponentUnitFilterForm{
+		Search: parameter.Get("search"),
+	}).Order("id DESC")
 
 	units, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentUnit{})
 	if err != nil {
@@ -60,20 +57,30 @@ func (repo *itemComponentUnitRepository) Find(parameter url.Values, args ...func
 	return units, pagination, nil
 }
 
-func (repo *itemComponentUnitRepository) FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentUnit {
+func (repo *itemComponentUnitRepository) FirstByForm(form form.ItemComponentUnitFilterForm) model.ItemComponentUnit {
 	var itemUnit model.ItemComponentUnit
 
-	query := config.PgSQL
-	if len(args) > 0 {
-		query = args[0](query)
-	}
+	query := repo.prepare(form)
 
-	err := query.First(&itemUnit, "id = ?", id).Error
+	err := query.First(&itemUnit).Error
 	if err != nil {
 		gxErr.ErrXtremeItemComponentUnitGet(err.Error())
 	}
 
 	return itemUnit
+}
+
+func (repo *itemComponentUnitRepository) FindByForm(form form.ItemComponentUnitFilterForm) []model.ItemComponentUnit {
+	var itemUnits []model.ItemComponentUnit
+
+	query := repo.prepare(form)
+
+	err := query.Model(&itemUnits).Error
+	if err != nil {
+		gxErr.ErrXtremeItemComponentUnitGet(err.Error())
+	}
+
+	return itemUnits
 }
 
 func (repo *itemComponentUnitRepository) Create(form form.ItemComponentUnitForm) model.ItemComponentUnit {
@@ -113,4 +120,21 @@ func (repo *itemComponentUnitRepository) Delete(itemUnit model.ItemComponentUnit
 	if err != nil {
 		gxErr.ErrXtremeItemComponentUnitDelete(err.Error())
 	}
+}
+
+/** --- Unexported Functions --- */
+
+func (repo *itemComponentUnitRepository) prepare(form form.ItemComponentUnitFilterForm) *gorm.DB {
+	query := config.PgSQL
+
+	if form.IDs != nil && len(form.IDs) > 0 {
+		query = query.Where("id IN (?)", form.IDs)
+	}
+
+	if form.Search != "" {
+		search := "%" + form.Search + "%"
+		query = query.Where("name LIKE @search OR abbreviation LIKE @search", sql.Named("search", search))
+	}
+
+	return query
 }

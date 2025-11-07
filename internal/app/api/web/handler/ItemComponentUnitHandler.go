@@ -15,7 +15,7 @@ type ItemComponentUnitHandler struct{}
 
 func (hlr *ItemComponentUnitHandler) Get(w http.ResponseWriter, r *http.Request) {
 	repo := SettingRepo.NewItemComponentUnitRepository()
-	units, pagination, _ := repo.Find(r.URL.Query())
+	units, pagination, _ := repo.Paginate(r.URL.Query())
 
 	parser := parser2.SettingItemUnitParser{Array: units}
 

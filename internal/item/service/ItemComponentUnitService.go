@@ -9,8 +9,8 @@ import (
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"strconv"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"gorm.io/gorm"
 )
 
@@ -40,7 +40,7 @@ func (srv *itemComponentUnitService) Create(form form.ItemComponentUnitForm) mod
 	var itemUnit model.ItemComponentUnit
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentUnitRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemUnit = srv.repository.Create(form)
 
@@ -64,7 +64,7 @@ func (srv *itemComponentUnitService) Update(id string, form form.ItemComponentUn
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemUnit).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewItemComponentUnitRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemUnit = srv.repository.Update(itemUnit, form)
 
@@ -83,7 +83,7 @@ func (srv *itemComponentUnitService) Delete(id string) {
 	itemUnit := srv.prepare(id)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentUnitRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		srv.repository.Delete(itemUnit)
 
@@ -98,8 +98,10 @@ func (srv *itemComponentUnitService) Delete(id string) {
 func (srv *itemComponentUnitService) prepare(id string) model.ItemComponentUnit {
 	srv.repository = repository.NewItemComponentUnitRepository(config.PgSQL)
 
-	uintId, _ := strconv.ParseUint(id, 10, 0)
-	itemUnit := srv.repository.FirstById(uint(uintId))
+	uintId := xtremepkg.ToInt(id)
+	itemUnit := srv.repository.FirstByForm(form.ItemComponentUnitFilterForm{
+		IDs: []uint{uint(uintId)},
+	})
 
 	return itemUnit
 }

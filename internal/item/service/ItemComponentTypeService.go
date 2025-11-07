@@ -9,8 +9,8 @@ import (
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"strconv"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"gorm.io/gorm"
 )
 
@@ -40,7 +40,7 @@ func (srv *itemComponentTypeService) Create(form form.SettingForm) model.ItemCom
 	var itemType model.ItemComponentType
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentTypeRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemType = srv.repository.Create(form)
 
@@ -64,7 +64,7 @@ func (srv *itemComponentTypeService) Update(id string, form form.SettingForm) mo
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		updateActivity := activity.UseActivity{}.SetReference(itemType).SetParser(&parser).SetOldProperty(constant.ACTION_UPDATE)
 
-		srv.repository = repository.NewItemComponentTypeRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		itemType = srv.repository.Update(itemType, form)
 
@@ -83,7 +83,7 @@ func (srv *itemComponentTypeService) Delete(id string) {
 	itemType := srv.prepare(id)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentTypeRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		srv.repository.Delete(itemType)
 
@@ -98,7 +98,7 @@ func (srv *itemComponentTypeService) Delete(id string) {
 func (srv *itemComponentTypeService) prepare(id string) model.ItemComponentType {
 	srv.repository = repository.NewItemComponentTypeRepository(config.PgSQL)
 
-	uintId, _ := strconv.ParseUint(id, 10, 0)
+	uintId := xtremepkg.ToInt(id)
 	itemType := srv.repository.FirstByForm(form.IdNameFilterForm{
 		IDs: []uint{uint(uintId)},
 	})

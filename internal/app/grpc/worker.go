@@ -9,6 +9,6 @@ import (
 func Register(srv *xtremegrpc.GRPCServer) {
 	srv.Register(
 		&server.TestingServer{},
-		&server.SettingItemBrandServer{},
+		&server.ItemComponentBrandServer{},
 	)
 }

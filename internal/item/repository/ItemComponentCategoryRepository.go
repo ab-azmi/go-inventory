@@ -44,10 +44,7 @@ func (repo *itemComponentCategoryRepository) SetTransaction(tx *gorm.DB) {
 func (repo *itemComponentCategoryRepository) Paginate(parameter url.Values) ([]model.ItemComponentCategory, interface{}, error) {
 	var categories []model.ItemComponentCategory
 
-	fromDate, toDate := core.SetDateRange(parameter)
-	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
-
-	query = repo.prepare(form.ItemComponentCategoryFilterForm{
+	query := repo.prepare(form.ItemComponentCategoryFilterForm{
 		Search:    parameter.Get("search"),
 		IsForSale: parameter.Get("isForSale") == "true",
 	}).Order("id DESC")
@@ -63,10 +60,9 @@ func (repo *itemComponentCategoryRepository) Paginate(parameter url.Values) ([]m
 func (repo *itemComponentCategoryRepository) FirstByForm(form form.ItemComponentCategoryFilterForm) model.ItemComponentCategory {
 	var itemCategory model.ItemComponentCategory
 
-	query := config.PgSQL
-	query = repo.prepare(form)
+	query := repo.prepare(form)
 
-	err := query.Model(&itemCategory).Error
+	err := query.First(&itemCategory).Error
 	if err != nil {
 		gxErr.ErrXtremeItemComponentCategoryGet(err.Error())
 	}

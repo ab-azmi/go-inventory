@@ -5,12 +5,12 @@ option go_package = "internal/pkg/grpc/inventory";
 
 import "Response.proto";
 
-service SettingItemBrandService {
-    rpc Store(SettingItemBrandRequest) returns (Response){}
+service ItemComponentBrandService {
+    rpc Store(ItemComponentBrandRequest) returns (Response){}
     rpc RollbackStore(RollbackRequest) returns (Response){}
 }
 
-message SettingItemBrandRequest {
+message ItemComponentBrandRequest {
     string name = 1;
 }
 
