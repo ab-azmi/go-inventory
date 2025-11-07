@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
+	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 
 	xtrememodel "github.com/globalxtreme/go-core/v2/model"
@@ -12,7 +13,7 @@ import (
 )
 
 type ItemRepository interface {
-	Find(parameters url.Values) ([]model.Item, interface{}, error)
+	core.PaginateRepository[model.Item]
 }
 
 func NewItemRepository() ItemRepository {
@@ -23,8 +24,15 @@ type itemRepository struct {
 	Transaction *gorm.DB
 }
 
-func (repo itemRepository) Find(parameters url.Values) ([]model.Item, interface{}, error) {
-	query := repo.filterByParam(parameters).Preload("Type").Preload("Category").Preload("Brand").Preload("Unit")
+func (repo itemRepository) Paginate(parameters url.Values) ([]model.Item, interface{}, error) {
+	fromDate, toDate := core.SetDateRange(parameters)
+
+	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
+
+	query = repo.prepareFilterForm(form.ItemFilterForm{
+		Search:   parameters.Get("search"),
+		Preloads: []string{"Type", "Category", "Brand", "Unit"},
+	})
 
 	items, pagination, err := xtrememodel.Paginate(query.Order("id DESC"), parameters, model.Item{})
 	if err != nil {
@@ -34,14 +42,24 @@ func (repo itemRepository) Find(parameters url.Values) ([]model.Item, interface{
 	return items, pagination, nil
 }
 
-func (repo itemRepository) filterByParam(parameters url.Values) *gorm.DB {
-	fromDate, toDate := core.SetDateRange(parameters)
+/** --- Unexported Functions --- */
 
-	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
+func (repo itemRepository) prepareFilterForm(form form.ItemFilterForm) *gorm.DB {
+	query := config.PgSQL
 
-	if searchReq := parameters.Get("search"); len(searchReq) > 3 {
-		searchVal := "%" + searchReq + "%"
+	if form.IDs != nil && len(form.IDs) > 0 {
+		query = query.Where("id IN (?)", form.IDs)
+	}
+
+	if form.Search != "" {
+		searchVal := "%" + form.Search + "%"
 		query = query.Where(`name ILIKE @search OR "SKU" ILIKE @search`, sql.Named("search", searchVal))
+	}
+
+	if form.Preloads != nil && len(form.Preloads) > 0 {
+		for _, preload := range form.Preloads {
+			query = query.Preload(preload)
+		}
 	}
 
 	return query

@@ -45,7 +45,7 @@ func (repo *itemComponentUnitRepository) SetTransaction(tx *gorm.DB) {
 func (repo *itemComponentUnitRepository) Paginate(parameter url.Values) ([]model.ItemComponentUnit, interface{}, error) {
 	var units []model.ItemComponentUnit
 
-	query := repo.prepare(form.ItemComponentUnitFilterForm{
+	query := repo.prepareFilterForm(form.ItemComponentUnitFilterForm{
 		Search: parameter.Get("search"),
 	}).Order("id DESC")
 
@@ -60,7 +60,7 @@ func (repo *itemComponentUnitRepository) Paginate(parameter url.Values) ([]model
 func (repo *itemComponentUnitRepository) FirstByForm(form form.ItemComponentUnitFilterForm) model.ItemComponentUnit {
 	var itemUnit model.ItemComponentUnit
 
-	query := repo.prepare(form)
+	query := repo.prepareFilterForm(form)
 
 	err := query.First(&itemUnit).Error
 	if err != nil {
@@ -73,7 +73,7 @@ func (repo *itemComponentUnitRepository) FirstByForm(form form.ItemComponentUnit
 func (repo *itemComponentUnitRepository) FindByForm(form form.ItemComponentUnitFilterForm) []model.ItemComponentUnit {
 	var itemUnits []model.ItemComponentUnit
 
-	query := repo.prepare(form)
+	query := repo.prepareFilterForm(form)
 
 	err := query.Model(&itemUnits).Error
 	if err != nil {
@@ -124,7 +124,7 @@ func (repo *itemComponentUnitRepository) Delete(itemUnit model.ItemComponentUnit
 
 /** --- Unexported Functions --- */
 
-func (repo *itemComponentUnitRepository) prepare(form form.ItemComponentUnitFilterForm) *gorm.DB {
+func (repo *itemComponentUnitRepository) prepareFilterForm(form form.ItemComponentUnitFilterForm) *gorm.DB {
 	query := config.PgSQL
 
 	if form.IDs != nil && len(form.IDs) > 0 {

@@ -11,7 +11,7 @@ type ItemWarehouseSerialNumberHistory struct {
 	Reference      *uint   `gorm:"column:reference;type:bigint"`
 	ReferenceType  *string `gorm:"column:referenceType;type:varchar(100)"`
 
-	SerialNumber ItemWarehouseSerialNumber `gorm:"foreignKey:serialNumberId;references:ID"`
+	SerialNumber ItemWarehouseSerialNumber `gorm:"foreignKey:serialNumberId"`
 }
 
 func (ItemWarehouseSerialNumberHistory) TableName() string {

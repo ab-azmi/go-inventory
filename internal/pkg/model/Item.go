@@ -10,18 +10,18 @@ type Item struct {
 	BrandId             *uint   `gorm:"column:brandId;type:bigint"`
 	SKU                 string  `gorm:"column:\"SKU\";type:varchar(20);not null"`
 	Name                string  `gorm:"column:name;type:varchar(255);not null"`
-	IsTrackSerialNumber bool    `gorm:"column:isTrackSerialNumber;default:false;not null"`
-	IsForSale           bool    `gorm:"column:isForSale;default:false;not null"`
-	IsQualified         bool    `gorm:"column:isQualified;default:false;not null"`
-	PurchasedCost       float64 `gorm:"column:purchasedCost;type:decimal(20,2);not null;default:0.00"`
+	IsTrackSerialNumber bool    `gorm:"column:isTrackSerialNumber;default:false"`
+	IsForSale           bool    `gorm:"column:isForSale;default:false"`
+	IsQualified         bool    `gorm:"column:isQualified;default:false"`
+	PurchasedCost       float64 `gorm:"column:purchasedCost;type:decimal(20,2);default:0.00"`
 	Photo               *string `gorm:"column:photo;type:varchar(255)"`
 	CreatedBy           *string `gorm:"column:createdBy;type:varchar(45);index"`
 	CreatedByName       *string `gorm:"column:createdByName;type:varchar(255)"`
 
-	Type     ItemComponentType     `gorm:"foreignKey:typeId;references:ID"`
-	Category ItemComponentCategory `gorm:"foreignKey:categoryId;references:ID"`
-	Brand    *ItemComponentBrand   `gorm:"foreignKey:brandId;references:ID"`
-	Unit     ItemComponentUnit     `gorm:"foreignKey:unitId;references:ID"`
+	Type     ItemComponentType     `gorm:"foreignKey:typeId"`
+	Category ItemComponentCategory `gorm:"foreignKey:categoryId"`
+	Brand    *ItemComponentBrand   `gorm:"foreignKey:brandId"`
+	Unit     ItemComponentUnit     `gorm:"foreignKey:unitId"`
 }
 
 func (Item) TableName() string {

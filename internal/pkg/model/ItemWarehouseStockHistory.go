@@ -11,7 +11,7 @@ type ItemWarehouseStockHistory struct {
 	Description     *string                        `gorm:"column:description;type:text"`
 	SerialNumbers   *xtrememodel.ArrayStringColumn `gorm:"column:serialNumbers;type:json"`
 
-	ItemWarehouse ItemWarehouse `gorm:"foreignKey:itemWarehouseId;references:ID"`
+	ItemWarehouse ItemWarehouse `gorm:"foreignKey:itemWarehouseId"`
 }
 
 func (ItemWarehouseStockHistory) TableName() string {

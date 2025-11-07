@@ -9,7 +9,7 @@ type SettingWarehouse struct {
 	Address        *string `gorm:"column:address;type:text"`
 	ParentId       *uint   `gorm:"column:parentId"`
 
-	Parent *SettingWarehouse `gorm:"foreignKey:parentId;references:ID"`
+	Parent *SettingWarehouse `gorm:"foreignKey:parentId"`
 }
 
 func (SettingWarehouse) TableName() string {

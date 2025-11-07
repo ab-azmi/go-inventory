@@ -44,7 +44,7 @@ func (repo *itemComponentTypeRepository) SetTransaction(tx *gorm.DB) {
 func (repo *itemComponentTypeRepository) Paginate(parameter url.Values) ([]model.ItemComponentType, interface{}, error) {
 	var types []model.ItemComponentType
 
-	query := repo.prepare(form.IdNameFilterForm{
+	query := repo.prepareFilterForm(form.IdNameFilterForm{
 		Search: parameter.Get("search"),
 	}).Order("id DESC")
 
@@ -61,7 +61,7 @@ func (repo *itemComponentTypeRepository) FirstByForm(form form.IdNameFilterForm)
 
 	query := config.PgSQL
 
-	query = repo.prepare(form)
+	query = repo.prepareFilterForm(form)
 
 	err := query.First(&itemType).Error
 	if err != nil {
@@ -76,7 +76,7 @@ func (repo *itemComponentTypeRepository) FindByForm(form form.IdNameFilterForm) 
 
 	query := config.PgSQL
 
-	query = repo.prepare(form).Order("id DESC")
+	query = repo.prepareFilterForm(form).Order("id DESC")
 
 	err := query.Model(&itemTypes).Error
 	if err != nil {
@@ -119,7 +119,7 @@ func (repo *itemComponentTypeRepository) Delete(itemType model.ItemComponentType
 
 /** --- Unexported Functions --- */
 
-func (repo *itemComponentTypeRepository) prepare(form form.IdNameFilterForm) *gorm.DB {
+func (repo *itemComponentTypeRepository) prepareFilterForm(form form.IdNameFilterForm) *gorm.DB {
 	query := config.PgSQL
 
 	if form.IDs != nil && len(form.IDs) > 0 {
