@@ -33,6 +33,7 @@ func itemRouter(router *mux.Router) {
 	var itemTypeHandler handler.ItemComponentTypeHandler
 	router.HandleFunc("/item-types", itemTypeHandler.Get).Methods("GET")
 	router.HandleFunc("/item-types", itemTypeHandler.Create).Methods("POST")
+	router.HandleFunc("/item-types/{id}", itemTypeHandler.Detail).Methods("GET")
 	router.HandleFunc("/item-types/{id}", itemTypeHandler.Update).Methods("PUT")
 	router.HandleFunc("/item-types/{id}", itemTypeHandler.Delete).Methods("DELETE")
 

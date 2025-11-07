@@ -102,7 +102,9 @@ func (srv *itemComponentTypeService) prepare(id string) model.ItemComponentType 
 	srv.repository = repository.NewItemComponentTypeRepository(config.PgSQL)
 
 	uintId, _ := strconv.ParseUint(id, 10, 0)
-	itemType := srv.repository.FirstById(uint(uintId))
+	itemType := srv.repository.FirstByForm(form.IdNameFilterForm{
+		IDs: []uint{uint(uintId)},
+	})
 
 	return itemType
 }

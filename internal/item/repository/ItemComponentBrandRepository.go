@@ -15,8 +15,8 @@ import (
 type ItemComponentBrandRepository interface {
 	core.TransactionRepository
 	core.PaginateRepository[model.ItemComponentBrand]
-	core.FirstByFormRepository[model.ItemComponentBrand, form.ItemComponentBrandFilterForm]
-	core.FindByFormRepository[model.ItemComponentBrand, form.ItemComponentBrandFilterForm]
+	core.FirstByFormRepository[model.ItemComponentBrand, form.IdNameFilterForm]
+	core.FindByFormRepository[model.ItemComponentBrand, form.IdNameFilterForm]
 
 	Create(form form.SettingForm) model.ItemComponentBrand
 	Update(brand model.ItemComponentBrand, form form.SettingForm) model.ItemComponentBrand
@@ -47,7 +47,7 @@ func (repo *itemComponentBrandRepository) Paginate(parameter url.Values) ([]mode
 	fromDate, toDate := core.SetDateRange(parameter)
 	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
 
-	query = repo.prepareFilterForm(form.ItemComponentBrandFilterForm{
+	query = repo.prepareFilterForm(form.IdNameFilterForm{
 		Search: parameter.Get("search"),
 	})
 
@@ -61,7 +61,7 @@ func (repo *itemComponentBrandRepository) Paginate(parameter url.Values) ([]mode
 	return brands, pagination, nil
 }
 
-func (repo *itemComponentBrandRepository) FirstByForm(form form.ItemComponentBrandFilterForm) model.ItemComponentBrand {
+func (repo *itemComponentBrandRepository) FirstByForm(form form.IdNameFilterForm) model.ItemComponentBrand {
 	query := repo.prepareFilterForm(form)
 
 	var brand model.ItemComponentBrand
@@ -73,7 +73,7 @@ func (repo *itemComponentBrandRepository) FirstByForm(form form.ItemComponentBra
 	return brand
 }
 
-func (repo *itemComponentBrandRepository) FindByForm(form form.ItemComponentBrandFilterForm) []model.ItemComponentBrand {
+func (repo *itemComponentBrandRepository) FindByForm(form form.IdNameFilterForm) []model.ItemComponentBrand {
 	query := repo.prepareFilterForm(form)
 
 	var brands []model.ItemComponentBrand
@@ -121,7 +121,7 @@ func (repo *itemComponentBrandRepository) Delete(brand model.ItemComponentBrand)
 
 /** --- Unexported Functions --- */
 
-func (repo *itemComponentBrandRepository) prepareFilterForm(form form.ItemComponentBrandFilterForm) *gorm.DB {
+func (repo *itemComponentBrandRepository) prepareFilterForm(form form.IdNameFilterForm) *gorm.DB {
 	query := config.PgSQL
 
 	if form.IDs != nil && len(form.IDs) > 0 {

@@ -106,7 +106,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseData(itemIds []uint, warehouseI
 				},
 				WarehouseId:  j,
 				ItemId:       i,
-				OrderType:    gofakeit.RandomString(constant.OrderType.OPTION()),
+				OrderType:    gofakeit.RandomString(constant.OrderType{}.OptionCodeNames()),
 				SellingPrice: gofakeit.Product().Price,
 				IsIncludeTax: gofakeit.Bool(),
 				Location:     core.StrPtr(gofakeit.AdverbPlace()),

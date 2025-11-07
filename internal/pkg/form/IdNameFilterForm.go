@@ -1,6 +1,6 @@
 package form
 
-type ItemComponentBrandFilterForm struct {
+type IdNameFilterForm struct {
 	IDs    []uint `json:"ids"`
 	Search string `json:"search"`
 	Page   uint   `json:"page"`

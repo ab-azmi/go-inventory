@@ -5,17 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"service/internal/item/repository"
-	"service/internal/pkg/activity"
-	"service/internal/pkg/config"
+	service2 "service/internal/item/service"
 	"service/internal/pkg/core"
 	"service/internal/pkg/form"
 	"service/internal/pkg/grpc/inventory"
 	"service/internal/pkg/model"
-	"service/internal/pkg/parser"
 
 	"google.golang.org/grpc"
-	"gorm.io/gorm"
 )
 
 type SettingItemBrandServer struct {
@@ -32,26 +28,11 @@ func (srv *SettingItemBrandServer) Store(ctx context.Context, in *inventory.Sett
 	res, err := core.GRPCErrorHandler(func() (*inventory.Response, error) {
 		var brand model.ItemComponentBrand
 
-		err := config.PgSQL.Transaction(func(tx *gorm.DB) error {
-			repo := repository.NewItemComponentBrandRepository(tx)
+		service := service2.NewItemComponentBrandService()
 
-			brand = repo.Create(form.SettingForm{Name: in.GetName()})
-
-			parser := parser.ItemComponentBrandParser{Object: brand}
-
-			activity.UseActivity{}.SetReference(brand).SetParser(&parser).
-				Save(fmt.Sprintf("gRPC: Create new brand: %s", brand.Name))
-
-			srv.rollbackData = map[string]interface{}{
-				"id": brand.ID,
-			}
-
-			return nil
+		brand = service.Create(form.SettingForm{
+			Name: in.GetName(),
 		})
-
-		if err != nil {
-			return nil, err
-		}
 
 		return srv.success(brand)
 	})
@@ -67,22 +48,9 @@ func (srv *SettingItemBrandServer) RollbackStore(ctx context.Context, in *invent
 
 		}
 
-		err = config.PgSQL.Transaction(func(tx *gorm.DB) error {
-			repo := repository.NewItemComponentBrandRepository(tx)
+		service := service2.NewItemComponentBrandService()
 
-			idInt, _ := srv.rollbackData["id"].(int)
-			id := uint(idInt)
-			brand := repo.FirstByForm(form.ItemComponentBrandFilterForm{
-				IDs: []uint{id},
-			})
-
-			repo.Delete(brand)
-
-			return nil
-		})
-		if err != nil {
-			return nil, err
-		}
+		service.Delete(srv.rollbackData["id"].(string))
 
 		return srv.success()
 	})
