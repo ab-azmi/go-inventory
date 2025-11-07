@@ -7,6 +7,7 @@ import (
 	form2 "service/internal/pkg/form"
 	parser2 "service/internal/pkg/parser"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
 	"github.com/gorilla/mux"
 )
@@ -15,11 +16,24 @@ type ItemComponentCategoryHandler struct{}
 
 func (hlr *ItemComponentCategoryHandler) Get(w http.ResponseWriter, r *http.Request) {
 	repo := SettingRepo.NewItemComponentCategoryRepository()
-	categories, pagination, _ := repo.Find(r.URL.Query())
+	categories, pagination, _ := repo.Paginate(r.URL.Query())
 
 	parser := parser2.ItemComponentCategoryParser{Array: categories}
 
 	response := xtremeres.Response{Array: parser.Get(), Pagination: &pagination}
+	response.Success(w)
+}
+
+func (hlr *ItemComponentCategoryHandler) Detail(w http.ResponseWriter, r *http.Request) {
+	repo := SettingRepo.NewItemComponentCategoryRepository()
+
+	id := xtremepkg.ToInt(mux.Vars(r)["id"])
+	category := repo.FirstByForm(form2.ItemComponentCategoryFilterForm{
+		IDs: []uint{uint(id)},
+	})
+
+	parser := parser2.ItemComponentCategoryParser{Object: category}
+	response := xtremeres.Response{Object: parser.First()}
 	response.Success(w)
 }
 

@@ -9,8 +9,8 @@ import (
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"strconv"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"gorm.io/gorm"
 )
 
@@ -82,15 +82,12 @@ func (srv *itemComponentCategoryService) Update(id string, form form.ItemCompone
 func (srv *itemComponentCategoryService) Delete(id string) {
 	itemCategory := srv.prepare(id)
 
-	parser := parser.ItemComponentCategoryParser{Object: itemCategory}
-
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewItemComponentCategoryRepository(tx)
 
 		srv.repository.Delete(itemCategory)
 
-		activity.UseActivity{}.SetReference(itemCategory).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
-			Save(fmt.Sprintf("Delete Category: %s", itemCategory.Name))
+		activity.UseActivity{}.SetReference(itemCategory).Save(fmt.Sprintf("Delete Category: %s", itemCategory.Name))
 
 		return nil
 	})
@@ -101,8 +98,10 @@ func (srv *itemComponentCategoryService) Delete(id string) {
 func (srv *itemComponentCategoryService) prepare(id string) model.ItemComponentCategory {
 	srv.repository = repository.NewItemComponentCategoryRepository(config.PgSQL)
 
-	uintId, _ := strconv.ParseUint(id, 10, 0)
-	itemCategory := srv.repository.FirstById(uint(uintId))
+	uintId := xtremepkg.ToInt(id)
+	itemCategory := srv.repository.FirstByForm(form.ItemComponentCategoryFilterForm{
+		IDs: []uint{uint(uintId)},
+	})
 
 	return itemCategory
 }

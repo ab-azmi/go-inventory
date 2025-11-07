@@ -53,6 +53,7 @@ func itemRouter(router *mux.Router) {
 	var itemCategoryHandler handler.ItemComponentCategoryHandler
 	router.HandleFunc("/item-categories", itemCategoryHandler.Get).Methods("GET")
 	router.HandleFunc("/item-categories", itemCategoryHandler.Create).Methods("POST")
+	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Detail).Methods("GET")
 	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Update).Methods("PUT")
 	router.HandleFunc("/item-categories/{id}", itemCategoryHandler.Delete).Methods("DELETE")
 }

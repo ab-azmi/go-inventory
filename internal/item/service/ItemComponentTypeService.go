@@ -82,15 +82,12 @@ func (srv *itemComponentTypeService) Update(id string, form form.SettingForm) mo
 func (srv *itemComponentTypeService) Delete(id string) {
 	itemType := srv.prepare(id)
 
-	parser := parser.ItemComponentTypeParser{Object: itemType}
-
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewItemComponentTypeRepository(tx)
 
 		srv.repository.Delete(itemType)
 
-		activity.UseActivity{}.SetReference(itemType).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
-			Save(fmt.Sprintf("Delete Type: %s", itemType.Name))
+		activity.UseActivity{}.SetReference(itemType).Save(fmt.Sprintf("Delete Type: %s", itemType.Name))
 
 		return nil
 	})
