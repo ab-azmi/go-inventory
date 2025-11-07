@@ -72,7 +72,9 @@ func (srv *SettingItemBrandServer) RollbackStore(ctx context.Context, in *invent
 
 			idInt, _ := srv.rollbackData["id"].(int)
 			id := uint(idInt)
-			brand := repo.FirstById(id)
+			brand := repo.FirstByForm(form.ItemComponentBrandFilterForm{
+				IDs: []uint{id},
+			})
 
 			repo.Delete(brand)
 

@@ -17,8 +17,8 @@ type ItemComponentCategoryRepository interface {
 
 	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentCategory, interface{}, error)
 	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentCategory
-	Create(form form.SettingItemCategoryForm) model.ItemComponentCategory
-	Update(itemCategory model.ItemComponentCategory, form form.SettingItemCategoryForm) model.ItemComponentCategory
+	Create(form form.ItemComponentCategoryForm) model.ItemComponentCategory
+	Update(itemCategory model.ItemComponentCategory, form form.ItemComponentCategoryForm) model.ItemComponentCategory
 	Delete(itemCategory model.ItemComponentCategory)
 }
 
@@ -76,7 +76,7 @@ func (repo *itemComponentCategoryRepository) FirstById(id uint, args ...func(que
 	return itemCategory
 }
 
-func (repo *itemComponentCategoryRepository) Create(form form.SettingItemCategoryForm) model.ItemComponentCategory {
+func (repo *itemComponentCategoryRepository) Create(form form.ItemComponentCategoryForm) model.ItemComponentCategory {
 	itemCategory := model.ItemComponentCategory{
 		Name:      form.Name,
 		IsForSale: form.IsForSale,
@@ -90,7 +90,7 @@ func (repo *itemComponentCategoryRepository) Create(form form.SettingItemCategor
 	return itemCategory
 }
 
-func (repo *itemComponentCategoryRepository) Update(itemCategory model.ItemComponentCategory, form form.SettingItemCategoryForm) model.ItemComponentCategory {
+func (repo *itemComponentCategoryRepository) Update(itemCategory model.ItemComponentCategory, form form.ItemComponentCategoryForm) model.ItemComponentCategory {
 	itemCategory.Name = form.Name
 	itemCategory.IsForSale = form.IsForSale
 

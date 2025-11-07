@@ -2,11 +2,12 @@ package handler
 
 import (
 	"net/http"
-	SettingRepo "service/internal/item/repository"
+	"service/internal/item/repository"
 	"service/internal/item/service"
 	form2 "service/internal/pkg/form"
 	parser2 "service/internal/pkg/parser"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
 	"github.com/gorilla/mux"
 )
@@ -14,8 +15,8 @@ import (
 type ItemComponentBrandHandler struct{}
 
 func (hlr *ItemComponentBrandHandler) Get(w http.ResponseWriter, r *http.Request) {
-	repo := SettingRepo.NewItemComponentBrandRepository()
-	brands, pagination, _ := repo.Find(r.URL.Query())
+	repo := repository.NewItemComponentBrandRepository()
+	brands, pagination, _ := repo.Paginate(r.URL.Query())
 
 	parser := parser2.ItemComponentBrandParser{Array: brands}
 
@@ -31,6 +32,19 @@ func (hlr *ItemComponentBrandHandler) Create(w http.ResponseWriter, r *http.Requ
 	srv := service.NewItemComponentBrandService()
 
 	brand := srv.Create(form)
+
+	parser := parser2.ItemComponentBrandParser{Object: brand}
+	res := xtremeres.Response{Object: parser.First()}
+	res.Success(w)
+}
+
+func (hlr *ItemComponentBrandHandler) Detail(w http.ResponseWriter, r *http.Request) {
+	repo := repository.NewItemComponentBrandRepository()
+
+	id := xtremepkg.ToInt(mux.Vars(r)["id"])
+	brand := repo.FirstByForm(form2.ItemComponentBrandFilterForm{
+		IDs: []uint{uint(id)},
+	})
 
 	parser := parser2.ItemComponentBrandParser{Object: brand}
 	res := xtremeres.Response{Object: parser.First()}

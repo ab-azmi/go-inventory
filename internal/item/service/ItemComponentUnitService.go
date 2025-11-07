@@ -17,8 +17,8 @@ import (
 type ItemComponentUnitService interface {
 	SetTransaction(tx *gorm.DB)
 
-	Create(form form.SettingItemUnitForm) model.ItemComponentUnit
-	Update(id string, form form.SettingItemUnitForm) model.ItemComponentUnit
+	Create(form form.ItemComponentUnitForm) model.ItemComponentUnit
+	Update(id string, form form.ItemComponentUnitForm) model.ItemComponentUnit
 	Delete(id string)
 }
 
@@ -36,7 +36,7 @@ func (srv *itemComponentUnitService) SetTransaction(tx *gorm.DB) {
 	srv.tx = tx
 }
 
-func (srv *itemComponentUnitService) Create(form form.SettingItemUnitForm) model.ItemComponentUnit {
+func (srv *itemComponentUnitService) Create(form form.ItemComponentUnitForm) model.ItemComponentUnit {
 	var itemUnit model.ItemComponentUnit
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
@@ -56,7 +56,7 @@ func (srv *itemComponentUnitService) Create(form form.SettingItemUnitForm) model
 
 }
 
-func (srv *itemComponentUnitService) Update(id string, form form.SettingItemUnitForm) model.ItemComponentUnit {
+func (srv *itemComponentUnitService) Update(id string, form form.ItemComponentUnitForm) model.ItemComponentUnit {
 	itemUnit := srv.prepare(id)
 
 	parser := parser.SettingItemUnitParser{Object: itemUnit}

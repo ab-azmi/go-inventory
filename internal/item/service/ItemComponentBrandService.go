@@ -9,8 +9,8 @@ import (
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 	"service/internal/pkg/parser"
-	"strconv"
 
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +37,7 @@ func (srv *itemComponentBrandService) SetTransaction(tx *gorm.DB) {
 }
 
 func (srv *itemComponentBrandService) Create(form form.SettingForm) model.ItemComponentBrand {
-	var brand model.ItemComponentBrand
+	brand := srv.prepare(nil)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
 		srv.repository = repository.NewItemComponentBrandRepository(tx)
@@ -53,11 +53,10 @@ func (srv *itemComponentBrandService) Create(form form.SettingForm) model.ItemCo
 	})
 
 	return brand
-
 }
 
 func (srv *itemComponentBrandService) Update(id string, form form.SettingForm) model.ItemComponentBrand {
-	brand := srv.prepare(id)
+	brand := srv.prepare(&id)
 
 	brandParser := parser.ItemComponentBrandParser{Object: brand}
 
@@ -80,17 +79,14 @@ func (srv *itemComponentBrandService) Update(id string, form form.SettingForm) m
 }
 
 func (srv *itemComponentBrandService) Delete(id string) {
-	brand := srv.prepare(id)
-
-	parser := parser.ItemComponentBrandParser{Object: brand}
+	brand := srv.prepare(&id)
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
-		srv.repository = repository.NewItemComponentBrandRepository(tx)
+		srv.repository.SetTransaction(tx)
 
 		srv.repository.Delete(brand)
 
-		activity.UseActivity{}.SetReference(brand).SetParser(&parser).SetOldProperty(constant.ACTION_DELETE).
-			Save(fmt.Sprintf("Delete brand: %s", brand.Name))
+		activity.UseActivity{}.SetReference(brand).Save(fmt.Sprintf("Delete brand: %s", brand.Name))
 
 		return nil
 	})
@@ -98,11 +94,16 @@ func (srv *itemComponentBrandService) Delete(id string) {
 
 /** --- FUNCTIONS --- */
 
-func (srv *itemComponentBrandService) prepare(id string) model.ItemComponentBrand {
+func (srv *itemComponentBrandService) prepare(id *string) model.ItemComponentBrand {
 	srv.repository = repository.NewItemComponentBrandRepository(config.PgSQL)
+	var brand model.ItemComponentBrand
 
-	uintId, _ := strconv.ParseUint(id, 10, 0)
-	brand := srv.repository.FirstById(uint(uintId))
+	if id != nil {
+		uintId := xtremepkg.ToInt(*id)
+		brand = srv.repository.FirstByForm(form.ItemComponentBrandFilterForm{
+			IDs: []uint{uint(uintId)},
+		})
+	}
 
 	return brand
 }

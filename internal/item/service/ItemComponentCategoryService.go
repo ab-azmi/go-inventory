@@ -17,8 +17,8 @@ import (
 type ItemComponentCategoryService interface {
 	SetTransaction(tx *gorm.DB)
 
-	Create(form form.SettingItemCategoryForm) model.ItemComponentCategory
-	Update(id string, form form.SettingItemCategoryForm) model.ItemComponentCategory
+	Create(form form.ItemComponentCategoryForm) model.ItemComponentCategory
+	Update(id string, form form.ItemComponentCategoryForm) model.ItemComponentCategory
 	Delete(id string)
 }
 
@@ -36,7 +36,7 @@ func (srv *itemComponentCategoryService) SetTransaction(tx *gorm.DB) {
 	srv.tx = tx
 }
 
-func (srv *itemComponentCategoryService) Create(form form.SettingItemCategoryForm) model.ItemComponentCategory {
+func (srv *itemComponentCategoryService) Create(form form.ItemComponentCategoryForm) model.ItemComponentCategory {
 	var itemCategory model.ItemComponentCategory
 
 	config.PgSQL.Transaction(func(tx *gorm.DB) error {
@@ -56,7 +56,7 @@ func (srv *itemComponentCategoryService) Create(form form.SettingItemCategoryFor
 
 }
 
-func (srv *itemComponentCategoryService) Update(id string, form form.SettingItemCategoryForm) model.ItemComponentCategory {
+func (srv *itemComponentCategoryService) Update(id string, form form.ItemComponentCategoryForm) model.ItemComponentCategory {
 	itemCategory := srv.prepare(id)
 
 	parser := parser.ItemComponentCategoryParser{Object: itemCategory}

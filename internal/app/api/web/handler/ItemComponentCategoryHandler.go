@@ -24,7 +24,7 @@ func (hlr *ItemComponentCategoryHandler) Get(w http.ResponseWriter, r *http.Requ
 }
 
 func (hlr *ItemComponentCategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := form2.SettingItemCategoryForm{}
+	form := form2.ItemComponentCategoryForm{}
 	form.APIParse(r)
 	form.Validate()
 
@@ -38,7 +38,7 @@ func (hlr *ItemComponentCategoryHandler) Create(w http.ResponseWriter, r *http.R
 }
 
 func (hlr *ItemComponentCategoryHandler) Update(w http.ResponseWriter, r *http.Request) {
-	form := form2.SettingItemCategoryForm{}
+	form := form2.ItemComponentCategoryForm{}
 	form.APIParse(r)
 	form.Validate()
 

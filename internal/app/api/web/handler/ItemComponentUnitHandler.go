@@ -24,7 +24,7 @@ func (hlr *ItemComponentUnitHandler) Get(w http.ResponseWriter, r *http.Request)
 }
 
 func (hlr *ItemComponentUnitHandler) Create(w http.ResponseWriter, r *http.Request) {
-	form := form2.SettingItemUnitForm{}
+	form := form2.ItemComponentUnitForm{}
 	form.APIParse(r)
 	form.Validate()
 
@@ -38,7 +38,7 @@ func (hlr *ItemComponentUnitHandler) Create(w http.ResponseWriter, r *http.Reque
 }
 
 func (hlr *ItemComponentUnitHandler) Update(w http.ResponseWriter, r *http.Request) {
-	form := form2.SettingItemUnitForm{}
+	form := form2.ItemComponentUnitForm{}
 	form.APIParse(r)
 	form.Validate()
 

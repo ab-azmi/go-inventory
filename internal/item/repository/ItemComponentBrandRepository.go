@@ -14,9 +14,10 @@ import (
 
 type ItemComponentBrandRepository interface {
 	core.TransactionRepository
+	core.PaginateRepository[model.ItemComponentBrand]
+	core.FirstByFormRepository[model.ItemComponentBrand, form.ItemComponentBrandFilterForm]
+	core.FindByFormRepository[model.ItemComponentBrand, form.ItemComponentBrandFilterForm]
 
-	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentBrand, interface{}, error)
-	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentBrand
 	Create(form form.SettingForm) model.ItemComponentBrand
 	Update(brand model.ItemComponentBrand, form form.SettingForm) model.ItemComponentBrand
 	Delete(brand model.ItemComponentBrand)
@@ -40,15 +41,15 @@ func (repo *itemComponentBrandRepository) SetTransaction(tx *gorm.DB) {
 	repo.transaction = tx
 }
 
-func (repo *itemComponentBrandRepository) Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentBrand, interface{}, error) {
+func (repo *itemComponentBrandRepository) Paginate(parameter url.Values) ([]model.ItemComponentBrand, interface{}, error) {
 	var brands []model.ItemComponentBrand
 
 	fromDate, toDate := core.SetDateRange(parameter)
 	query := config.PgSQL.Where(`"createdAt" BETWEEN ? AND ?`, fromDate, toDate)
 
-	if search := parameter.Get("search"); len(search) > 3 {
-		query = query.Where("name LIKE ?", "%"+search+"%")
-	}
+	query = repo.prepareFilterForm(form.ItemComponentBrandFilterForm{
+		Search: parameter.Get("search"),
+	})
 
 	query = query.Order("id DESC")
 
@@ -60,20 +61,31 @@ func (repo *itemComponentBrandRepository) Find(parameter url.Values, args ...fun
 	return brands, pagination, nil
 }
 
-func (repo *itemComponentBrandRepository) FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentBrand {
+func (repo *itemComponentBrandRepository) FirstByForm(form form.ItemComponentBrandFilterForm) model.ItemComponentBrand {
+	query := repo.prepareFilterForm(form)
+
 	var brand model.ItemComponentBrand
-
-	query := config.PgSQL
-	if len(args) > 0 {
-		query = args[0](query)
-	}
-
-	err := query.First(&brand, "id = ?", id).Error
+	err := query.First(&brand).Error
 	if err != nil {
 		gxErr.ErrXtremeItemComponentBrandGet(err.Error())
 	}
 
 	return brand
+}
+
+func (repo *itemComponentBrandRepository) FindByForm(form form.ItemComponentBrandFilterForm) []model.ItemComponentBrand {
+	query := repo.prepareFilterForm(form)
+
+	var brands []model.ItemComponentBrand
+
+	query = query.Order("id DESC")
+
+	err := query.Model(&brands).Error
+	if err != nil {
+		gxErr.ErrXtremeItemComponentBrandGet(err.Error())
+	}
+
+	return brands
 }
 
 func (repo *itemComponentBrandRepository) Create(form form.SettingForm) model.ItemComponentBrand {
@@ -105,4 +117,25 @@ func (repo *itemComponentBrandRepository) Delete(brand model.ItemComponentBrand)
 	if err != nil {
 		gxErr.ErrXtremeItemComponentBrandDelete(err.Error())
 	}
+}
+
+/** --- Unexported Functions --- */
+
+func (repo *itemComponentBrandRepository) prepareFilterForm(form form.ItemComponentBrandFilterForm) *gorm.DB {
+	query := config.PgSQL
+
+	if form.IDs != nil && len(form.IDs) > 0 {
+		query = query.Where("id IN (?)", form.IDs)
+	}
+
+	if form.Search != "" {
+		search := "%" + form.Search + "%"
+		query = query.Where("name LIKE ?", search)
+	}
+
+	if form.Limit > 0 {
+		query = query.Limit(int(form.Limit))
+	}
+
+	return query
 }

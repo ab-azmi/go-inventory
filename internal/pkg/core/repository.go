@@ -31,6 +31,14 @@ type PaginateRepository[M any] interface {
 	Paginate(parameter url.Values) ([]M, interface{}, error)
 }
 
+type FirstByFormRepository[M any, N any] interface {
+	FirstByForm(form N) M
+}
+
+type FindByFormRepository[M any, N any] interface {
+	FindByForm(form N) []M
+}
+
 type NumberPoolRepository interface {
 	TransactionRepository
 	TakenNumberPool(number ...string) string

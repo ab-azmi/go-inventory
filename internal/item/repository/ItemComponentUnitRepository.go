@@ -17,8 +17,8 @@ type ItemComponentUnitRepository interface {
 
 	Find(parameter url.Values, args ...func(query *gorm.DB) *gorm.DB) ([]model.ItemComponentUnit, interface{}, error)
 	FirstById(id uint, args ...func(query *gorm.DB) *gorm.DB) model.ItemComponentUnit
-	Create(form form.SettingItemUnitForm) model.ItemComponentUnit
-	Update(itemUnit model.ItemComponentUnit, form form.SettingItemUnitForm) model.ItemComponentUnit
+	Create(form form.ItemComponentUnitForm) model.ItemComponentUnit
+	Update(itemUnit model.ItemComponentUnit, form form.ItemComponentUnitForm) model.ItemComponentUnit
 	Delete(itemUnit model.ItemComponentUnit)
 }
 
@@ -76,7 +76,7 @@ func (repo *itemComponentUnitRepository) FirstById(id uint, args ...func(query *
 	return itemUnit
 }
 
-func (repo *itemComponentUnitRepository) Create(form form.SettingItemUnitForm) model.ItemComponentUnit {
+func (repo *itemComponentUnitRepository) Create(form form.ItemComponentUnitForm) model.ItemComponentUnit {
 	itemUnit := model.ItemComponentUnit{
 		Name:         form.Name,
 		Abbreviation: form.Abbreviation,
@@ -93,7 +93,7 @@ func (repo *itemComponentUnitRepository) Create(form form.SettingItemUnitForm) m
 	return itemUnit
 }
 
-func (repo *itemComponentUnitRepository) Update(itemUnit model.ItemComponentUnit, form form.SettingItemUnitForm) model.ItemComponentUnit {
+func (repo *itemComponentUnitRepository) Update(itemUnit model.ItemComponentUnit, form form.ItemComponentUnitForm) model.ItemComponentUnit {
 	itemUnit.Name = form.Name
 	itemUnit.Abbreviation = form.Abbreviation
 	itemUnit.Type = form.Type
