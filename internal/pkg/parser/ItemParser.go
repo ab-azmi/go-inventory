@@ -22,7 +22,7 @@ func (parser *ItemParser) Get() []interface{} {
 func (parser *ItemParser) First() interface{} {
 	object := parser.Object
 
-	var brand map[string]interface{}
+	var brand interface{}
 	if object.Brand != nil {
 		brand = map[string]interface{}{
 			"id":   object.Brand.ID,

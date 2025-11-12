@@ -1,25 +1,15 @@
 package constant
 
-type SerialNumberTypeStruct struct {
-	IN      string
-	OUT     string
-	options []string
-}
+const (
+	SerialNumberIN  = "in"
+	SerialNumberOUT = "out"
+)
 
-var SerialNumberType = func() SerialNumberTypeStruct {
-	sn := SerialNumberTypeStruct{
-		IN:  "in",
-		OUT: "out",
+type SerialNumberType struct{}
+
+func (snType SerialNumberType) OptionCodeNames() []string {
+	return []string{
+		SerialNumberIN,
+		SerialNumberOUT,
 	}
-
-	sn.options = []string{
-		sn.IN,
-		sn.OUT,
-	}
-
-	return sn
-}()
-
-func (sn SerialNumberTypeStruct) OPTION() []string {
-	return append([]string(nil), sn.options...)
 }

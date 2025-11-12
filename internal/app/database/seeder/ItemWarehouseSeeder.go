@@ -154,7 +154,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseStockData(itemWarehouseIds []ui
 		for _, num := range *numbers {
 			mapNumbers[num.ItemWarehouseId] = append(mapNumbers[num.ItemWarehouseId], num.Number)
 
-			if num.Status == constant.SerialNumberType.IN {
+			if num.Status == constant.SerialNumberIN {
 				mapQty[num.ItemWarehouseId] += 1
 			}
 		}
@@ -207,7 +207,7 @@ func (seed *ItemWarehouseSeeder) getItemWarehouseSerialNumberData(rows uint, ite
 	var histories []model.ItemWarehouseSerialNumberHistory
 
 	for i := uint(1); i < rows; i++ {
-		snType := gofakeit.RandomString(constant.SerialNumberType.OPTION())
+		snType := gofakeit.RandomString(constant.SerialNumberType{}.OptionCodeNames())
 
 		numbers = append(numbers, model.ItemWarehouseSerialNumber{
 			BaseModel: xtrememodel.BaseModel{

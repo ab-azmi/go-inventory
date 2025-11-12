@@ -33,6 +33,8 @@ func (parser *SettingItemUnitParser) First() interface{} {
 	}
 }
 
+/** --- Activity --- */
+
 func (parser *SettingItemUnitParser) CreateActivity(action string) interface{} {
 	object := parser.Object
 

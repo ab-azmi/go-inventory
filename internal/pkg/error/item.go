@@ -6,6 +6,10 @@ import (
 	xtremeres "github.com/globalxtreme/go-core/v2/response"
 )
 
+func ErrXtremeItemNumber(internalMsg string) {
+	xtremeres.Error(http.StatusInternalServerError, "Unable to generate Number", internalMsg, false, nil)
+}
+
 /** --- Components --- */
 
 /** --- Type --- */

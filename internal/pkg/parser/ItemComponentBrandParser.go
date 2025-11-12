@@ -29,6 +29,8 @@ func (parser *ItemComponentBrandParser) First() interface{} {
 	}
 }
 
+/** --- Activity --- */
+
 func (parser *ItemComponentBrandParser) CreateActivity(action string) interface{} {
 	object := parser.Object
 

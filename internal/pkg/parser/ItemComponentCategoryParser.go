@@ -30,6 +30,8 @@ func (parser *ItemComponentCategoryParser) First() interface{} {
 	}
 }
 
+/** --- Activity --- */
+
 func (parser *ItemComponentCategoryParser) CreateActivity(action string) interface{} {
 	object := parser.Object
 
