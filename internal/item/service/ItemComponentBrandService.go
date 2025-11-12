@@ -101,7 +101,7 @@ func (srv *itemComponentBrandService) prepare(id *string) model.ItemComponentBra
 	if id != nil {
 		uintId := xtremepkg.ToInt(*id)
 		brand = srv.repository.FirstByForm(form.IdNameFilterForm{
-			IDs: []uint{uint(uintId)},
+			ID: uint(uintId),
 		})
 	}
 

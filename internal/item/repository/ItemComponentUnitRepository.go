@@ -131,6 +131,10 @@ func (repo *itemComponentUnitRepository) prepareFilterForm(form form.ItemCompone
 		query = query.Where("id IN (?)", form.IDs)
 	}
 
+	if form.ID > 0 {
+		query = query.Where("id =?", form.ID)
+	}
+
 	if form.Search != "" {
 		search := "%" + form.Search + "%"
 		query = query.Where("name LIKE @search OR abbreviation LIKE @search", sql.Named("search", search))

@@ -123,6 +123,10 @@ func (repo *itemComponentBrandRepository) prepareFilterForm(form form.IdNameFilt
 		query = query.Where("id IN (?)", form.IDs)
 	}
 
+	if form.ID > 0 {
+		query = query.Where("id =?", form.ID)
+	}
+
 	if form.Search != "" {
 		search := "%" + form.Search + "%"
 		query = query.Where("name LIKE ?", search)

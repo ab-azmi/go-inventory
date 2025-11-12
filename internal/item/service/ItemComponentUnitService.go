@@ -100,7 +100,7 @@ func (srv *itemComponentUnitService) prepare(id string) model.ItemComponentUnit 
 
 	uintId := xtremepkg.ToInt(id)
 	itemUnit := srv.repository.FirstByForm(form.ItemComponentUnitFilterForm{
-		IDs: []uint{uint(uintId)},
+		ID: uint(uintId),
 	})
 
 	return itemUnit

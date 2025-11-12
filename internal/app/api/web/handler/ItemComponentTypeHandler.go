@@ -29,7 +29,7 @@ func (hlr *ItemComponentTypeHandler) Detail(w http.ResponseWriter, r *http.Reque
 
 	id := xtremepkg.ToInt(mux.Vars(r)["id"])
 	itemType := repo.FirstByForm(form2.IdNameFilterForm{
-		IDs: []uint{uint(id)},
+		ID: uint(id),
 	})
 
 	parser := parser2.ItemComponentTypeParser{Object: itemType}

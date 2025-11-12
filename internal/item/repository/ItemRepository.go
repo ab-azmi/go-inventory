@@ -51,6 +51,10 @@ func (repo itemRepository) prepareFilterForm(form form.ItemFilterForm) *gorm.DB 
 		query = query.Where("id IN (?)", form.IDs)
 	}
 
+	if form.ID > 0 {
+		query = query.Where("id =?", form.ID)
+	}
+
 	if form.Search != "" {
 		searchVal := "%" + form.Search + "%"
 		query = query.Where(`name ILIKE @search OR "SKU" ILIKE @search`, sql.Named("search", searchVal))
@@ -60,6 +64,22 @@ func (repo itemRepository) prepareFilterForm(form form.ItemFilterForm) *gorm.DB 
 		for _, preload := range form.Preloads {
 			query = query.Preload(preload)
 		}
+	}
+
+	if form.BrandIds != nil && len(form.BrandIds) > 0 {
+		query = query.Where("brandId IN (?)", form.BrandIds)
+	}
+
+	if form.UnitIds != nil && len(form.UnitIds) > 0 {
+		query = query.Where("unitId IN (?)", form.UnitIds)
+	}
+
+	if form.CategoryIds != nil && len(form.CategoryIds) > 0 {
+		query = query.Where("categoryId IN (?)", form.CategoryIds)
+	}
+
+	if form.TypeIds != nil && len(form.TypeIds) > 0 {
+		query = query.Where("typeId IN (?)", form.TypeIds)
 	}
 
 	return query
