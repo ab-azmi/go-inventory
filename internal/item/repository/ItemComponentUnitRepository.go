@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
@@ -46,8 +47,9 @@ func (repo *itemComponentUnitRepository) Paginate(parameter url.Values) ([]model
 	var units []model.ItemComponentUnit
 
 	query := repo.prepareFilterForm(form.ItemComponentUnitFilterForm{
-		Search: parameter.Get("search"),
-	}).Order("id DESC")
+		Search:  parameter.Get("search"),
+		OrderBy: parameter.Get("orderBy"),
+	})
 
 	units, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentUnit{})
 	if err != nil {
@@ -138,6 +140,17 @@ func (repo *itemComponentUnitRepository) prepareFilterForm(form form.ItemCompone
 	if form.Search != "" {
 		search := "%" + form.Search + "%"
 		query = query.Where("name LIKE @search OR abbreviation LIKE @search", sql.Named("search", search))
+	}
+
+	if form.OrderBy != "" {
+		field, direction, err := core.GetOrderBy(form.OrderBy)
+		if err != nil {
+			gxErr.ErrXtremeItemComponentUnitGet(err.Error())
+		}
+
+		query = query.Order(fmt.Sprintf("%s %s", field, direction))
+	} else {
+		query = query.Order("id DESC")
 	}
 
 	return query

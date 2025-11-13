@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
@@ -15,8 +16,8 @@ import (
 type ItemComponentBrandRepository interface {
 	core.TransactionRepository
 	core.PaginateRepository[model.ItemComponentBrand]
-	core.FirstByFormRepository[model.ItemComponentBrand, form.IdNameFilterForm]
-	core.FindByFormRepository[model.ItemComponentBrand, form.IdNameFilterForm]
+	core.FirstByFormRepository[model.ItemComponentBrand, form.ComponentFilterForm]
+	core.FindByFormRepository[model.ItemComponentBrand, form.ComponentFilterForm]
 
 	Create(form form.SettingForm) model.ItemComponentBrand
 	Update(brand model.ItemComponentBrand, form form.SettingForm) model.ItemComponentBrand
@@ -44,9 +45,10 @@ func (repo *itemComponentBrandRepository) SetTransaction(tx *gorm.DB) {
 func (repo *itemComponentBrandRepository) Paginate(parameter url.Values) ([]model.ItemComponentBrand, interface{}, error) {
 	var brands []model.ItemComponentBrand
 
-	query := repo.prepareFilterForm(form.IdNameFilterForm{
-		Search: parameter.Get("search"),
-	}).Order("id DESC")
+	query := repo.prepareFilterForm(form.ComponentFilterForm{
+		Search:  parameter.Get("search"),
+		OrderBy: parameter.Get("orderBy"),
+	})
 
 	brands, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentBrand{})
 	if err != nil {
@@ -56,7 +58,7 @@ func (repo *itemComponentBrandRepository) Paginate(parameter url.Values) ([]mode
 	return brands, pagination, nil
 }
 
-func (repo *itemComponentBrandRepository) FirstByForm(form form.IdNameFilterForm) model.ItemComponentBrand {
+func (repo *itemComponentBrandRepository) FirstByForm(form form.ComponentFilterForm) model.ItemComponentBrand {
 	query := repo.prepareFilterForm(form)
 
 	var brand model.ItemComponentBrand
@@ -68,12 +70,10 @@ func (repo *itemComponentBrandRepository) FirstByForm(form form.IdNameFilterForm
 	return brand
 }
 
-func (repo *itemComponentBrandRepository) FindByForm(form form.IdNameFilterForm) []model.ItemComponentBrand {
+func (repo *itemComponentBrandRepository) FindByForm(form form.ComponentFilterForm) []model.ItemComponentBrand {
 	query := repo.prepareFilterForm(form)
 
 	var brands []model.ItemComponentBrand
-
-	query = query.Order("id DESC")
 
 	err := query.Model(&brands).Error
 	if err != nil {
@@ -116,7 +116,7 @@ func (repo *itemComponentBrandRepository) Delete(brand model.ItemComponentBrand)
 
 /** --- Unexported Functions --- */
 
-func (repo *itemComponentBrandRepository) prepareFilterForm(form form.IdNameFilterForm) *gorm.DB {
+func (repo *itemComponentBrandRepository) prepareFilterForm(form form.ComponentFilterForm) *gorm.DB {
 	query := config.PgSQL
 
 	if form.IDs != nil && len(form.IDs) > 0 {
@@ -134,6 +134,17 @@ func (repo *itemComponentBrandRepository) prepareFilterForm(form form.IdNameFilt
 
 	if form.Limit > 0 {
 		query = query.Limit(int(form.Limit))
+	}
+
+	if form.OrderBy != "" {
+		field, direction, err := core.GetOrderBy(form.OrderBy)
+		if err != nil {
+			gxErr.ErrXtremeItemComponentBrandGet(err.Error())
+		}
+
+		query = query.Order(fmt.Sprintf("%s %s", field, direction))
+	} else {
+		query = query.Order("id DESC")
 	}
 
 	return query

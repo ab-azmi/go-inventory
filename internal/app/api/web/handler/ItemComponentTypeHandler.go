@@ -28,7 +28,7 @@ func (hlr *ItemComponentTypeHandler) Detail(w http.ResponseWriter, r *http.Reque
 	repo := SettingRepo.NewItemComponentTypeRepository()
 
 	id := xtremepkg.ToInt(mux.Vars(r)["id"])
-	itemType := repo.FirstByForm(form2.IdNameFilterForm{
+	itemType := repo.FirstByForm(form2.ComponentFilterForm{
 		ID: uint(id),
 	})
 

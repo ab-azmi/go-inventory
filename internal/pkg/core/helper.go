@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"math/rand"
 	"net/url"
 	"strings"
@@ -50,4 +51,20 @@ func UintPtr(num uint) *uint {
 
 func ArrayStringPtr(arr []string) *[]string {
 	return &arr
+}
+
+func GetOrderBy(query string) (field string, direction string, err error) {
+	parts := strings.SplitN(query, " ", 2)
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid order by: %s", query)
+	}
+
+	field = parts[0]
+	direction = strings.ToLower(parts[1])
+
+	if direction != "asc" && direction != "desc" {
+		return "", "", fmt.Errorf("invalid order by: %s", query)
+	}
+
+	return field, direction, nil
 }

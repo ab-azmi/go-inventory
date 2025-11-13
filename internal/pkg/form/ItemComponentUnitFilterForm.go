@@ -6,4 +6,5 @@ type ItemComponentUnitFilterForm struct {
 	Search     string   `json:"search"`
 	Types      []string `json:"types"`
 	IsBaseUnit bool     `json:"isBaseUnit"`
+	OrderBy    string   `json:"orderBy"`
 }

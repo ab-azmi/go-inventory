@@ -42,7 +42,7 @@ func (hlr *ItemComponentBrandHandler) Detail(w http.ResponseWriter, r *http.Requ
 	repo := repository.NewItemComponentBrandRepository()
 
 	id := xtremepkg.ToInt(mux.Vars(r)["id"])
-	brand := repo.FirstByForm(form2.IdNameFilterForm{
+	brand := repo.FirstByForm(form2.ComponentFilterForm{
 		ID: uint(id),
 	})
 

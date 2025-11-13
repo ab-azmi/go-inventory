@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
@@ -47,7 +48,8 @@ func (repo *itemComponentCategoryRepository) Paginate(parameter url.Values) ([]m
 	query := repo.prepareFilterForm(form.ItemComponentCategoryFilterForm{
 		Search:    parameter.Get("search"),
 		IsForSale: parameter.Get("isForSale") == "true",
-	}).Order("id DESC")
+		OrderBy:   parameter.Get("orderBy"),
+	})
 
 	categories, pagination, err := xtrememodel.Paginate(query, parameter, model.ItemComponentCategory{})
 	if err != nil {
@@ -132,6 +134,17 @@ func (repo *itemComponentCategoryRepository) prepareFilterForm(form form.ItemCom
 
 	if form.Search != "" {
 		query = query.Where("name LIKE ?", "%"+form.Search+"%")
+	}
+
+	if form.OrderBy != "" {
+		field, direction, err := core.GetOrderBy(form.OrderBy)
+		if err != nil {
+			gxErr.ErrXtremeItemComponentCategoryGet(err.Error())
+		}
+
+		query = query.Order(fmt.Sprintf("%s %s", field, direction))
+	} else {
+		query = query.Order("id DESC")
 	}
 
 	return query

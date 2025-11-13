@@ -99,7 +99,7 @@ func (srv *itemComponentTypeService) prepare(id string) model.ItemComponentType 
 	srv.repository = repository.NewItemComponentTypeRepository(config.PgSQL)
 
 	uintId := xtremepkg.ToInt(id)
-	itemType := srv.repository.FirstByForm(form.IdNameFilterForm{
+	itemType := srv.repository.FirstByForm(form.ComponentFilterForm{
 		ID: uint(uintId),
 	})
 
