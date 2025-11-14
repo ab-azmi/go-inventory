@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"service/internal/pkg/config"
 	"service/internal/pkg/core"
-	gxErr "service/internal/pkg/error"
+	error2 "service/internal/pkg/error"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
 
@@ -61,13 +61,11 @@ func (repo *itemComponentTypeRepository) Paginate(parameter url.Values) ([]model
 func (repo *itemComponentTypeRepository) FirstByForm(form form.ComponentFilterForm) model.ItemComponentType {
 	var itemType model.ItemComponentType
 
-	query := config.PgSQL
-
-	query = repo.prepareFilterForm(form)
+	query := repo.prepareFilterForm(form)
 
 	err := query.First(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeItemComponentTypeGet(err.Error())
+		error2.ErrXtremeItemComponentTypeGet(err.Error())
 	}
 
 	return itemType
@@ -76,13 +74,11 @@ func (repo *itemComponentTypeRepository) FirstByForm(form form.ComponentFilterFo
 func (repo *itemComponentTypeRepository) FindByForm(form form.ComponentFilterForm) []model.ItemComponentType {
 	var itemTypes []model.ItemComponentType
 
-	query := config.PgSQL
+	query := repo.prepareFilterForm(form)
 
-	query = repo.prepareFilterForm(form)
-
-	err := query.Model(&itemTypes).Error
+	err := query.Find(&itemTypes).Error
 	if err != nil {
-		gxErr.ErrXtremeItemComponentTypeGet(err.Error())
+		error2.ErrXtremeItemComponentTypeGet(err.Error())
 	}
 
 	return itemTypes
@@ -95,7 +91,7 @@ func (repo *itemComponentTypeRepository) Create(form form.SettingForm) model.Ite
 
 	err := repo.transaction.Create(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeItemComponentTypeCreate(err.Error())
+		error2.ErrXtremeItemComponentTypeCreate(err.Error())
 	}
 
 	return itemType
@@ -106,7 +102,7 @@ func (repo *itemComponentTypeRepository) Update(itemType model.ItemComponentType
 
 	err := repo.transaction.Save(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeItemComponentTypeUpdate(err.Error())
+		error2.ErrXtremeItemComponentTypeUpdate(err.Error())
 	}
 
 	return itemType
@@ -115,7 +111,7 @@ func (repo *itemComponentTypeRepository) Update(itemType model.ItemComponentType
 func (repo *itemComponentTypeRepository) Delete(itemType model.ItemComponentType) {
 	err := repo.transaction.Delete(&itemType).Error
 	if err != nil {
-		gxErr.ErrXtremeItemComponentTypeDelete(err.Error())
+		error2.ErrXtremeItemComponentTypeDelete(err.Error())
 	}
 }
 
@@ -139,7 +135,7 @@ func (repo *itemComponentTypeRepository) prepareFilterForm(form form.ComponentFi
 	if form.OrderBy != "" {
 		field, direction, err := core.GetOrderBy(form.OrderBy)
 		if err != nil {
-			gxErr.ErrXtremeItemComponentTypeGet(err.Error())
+			error2.ErrXtremeItemComponentTypeGet(err.Error())
 		}
 
 		query = query.Order(fmt.Sprintf("%s %s", field, direction))
